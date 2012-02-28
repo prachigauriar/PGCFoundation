@@ -6,8 +6,73 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4C43973C14F7DEA90041660D /* PGCObject.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43973614F7DEA90041660D /* PGCObject.c */; };
+		4C43973D14F7DEA90041660D /* PGCObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43973714F7DEA90041660D /* PGCObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43974214F7EF540041660D /* PGCCharacter.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43974014F7EF540041660D /* PGCCharacter.c */; };
+		4C43974314F7EF540041660D /* PGCCharacter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43974114F7EF540041660D /* PGCCharacter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43974614F80E770041660D /* PGCBoolean.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43974414F80E770041660D /* PGCBoolean.c */; };
+		4C43974714F80E770041660D /* PGCBoolean.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43974514F80E770041660D /* PGCBoolean.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43974A14F820370041660D /* PGCDecimal.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43974814F820370041660D /* PGCDecimal.c */; };
+		4C43974B14F820370041660D /* PGCDecimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43974914F820370041660D /* PGCDecimal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43974E14F824120041660D /* PGCInteger.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43974C14F824120041660D /* PGCInteger.c */; };
+		4C43974F14F824120041660D /* PGCInteger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43974D14F824120041660D /* PGCInteger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43975814F837D80041660D /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43975714F837D80041660D /* main.c */; };
+		4C43975E14F83CF00041660D /* libPGCFoundation.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C43972E14F7DDDC0041660D /* libPGCFoundation.dylib */; };
+		4C43976014F83D230041660D /* PGCFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43975F14F83D230041660D /* PGCFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43976214F848060041660D /* PGCString.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43976114F848060041660D /* PGCString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43976514F848A00041660D /* PGCClass.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43976414F848A00041660D /* PGCClass.c */; };
+		4C43976714F8491D0041660D /* PGCBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43976614F848C60041660D /* PGCBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43976814F849260041660D /* PGCClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43976314F8488F0041660D /* PGCClass.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43976E14F8A22A0041660D /* PGCString.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43976D14F8A22A0041660D /* PGCString.c */; };
+		4C43977014FA8F120041660D /* PGCBase.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43976F14FA8F120041660D /* PGCBase.c */; };
+		4C43977314FA92520041660D /* PGCArray.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43977214FA92520041660D /* PGCArray.c */; };
+		4C43977414FA92740041660D /* PGCArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43977114FA92470041660D /* PGCArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43977814FAE9A10041660D /* PGCNull.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43977714FAE9A10041660D /* PGCNull.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43977A14FAEA4F0041660D /* PGCNull.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43977914FAEA4F0041660D /* PGCNull.c */; };
+		4C43977E14FAFC6C0041660D /* PGCAutoreleasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43977D14FAFC6C0041660D /* PGCAutoreleasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C43978014FAFE210041660D /* PGCAutoreleasePool.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4C43975214F837D80041660D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4C43972E14F7DDDC0041660D /* libPGCFoundation.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libPGCFoundation.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43973614F7DEA90041660D /* PGCObject.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCObject.c; sourceTree = "<group>"; };
+		4C43973714F7DEA90041660D /* PGCObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCObject.h; sourceTree = "<group>"; };
+		4C43974014F7EF540041660D /* PGCCharacter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = PGCCharacter.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		4C43974114F7EF540041660D /* PGCCharacter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PGCCharacter.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4C43974414F80E770041660D /* PGCBoolean.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = PGCBoolean.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		4C43974514F80E770041660D /* PGCBoolean.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PGCBoolean.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4C43974814F820370041660D /* PGCDecimal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = PGCDecimal.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		4C43974914F820370041660D /* PGCDecimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PGCDecimal.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4C43974C14F824120041660D /* PGCInteger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = PGCInteger.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		4C43974D14F824120041660D /* PGCInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PGCInteger.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4C43975414F837D80041660D /* PGCFoundationTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PGCFoundationTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43975714F837D80041660D /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		4C43975F14F83D230041660D /* PGCFoundation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCFoundation.h; sourceTree = "<group>"; };
+		4C43976114F848060041660D /* PGCString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCString.h; sourceTree = "<group>"; };
+		4C43976314F8488F0041660D /* PGCClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PGCClass.h; sourceTree = "<group>"; };
+		4C43976414F848A00041660D /* PGCClass.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCClass.c; sourceTree = "<group>"; };
+		4C43976614F848C60041660D /* PGCBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PGCBase.h; sourceTree = "<group>"; };
+		4C43976D14F8A22A0041660D /* PGCString.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCString.c; sourceTree = "<group>"; };
+		4C43976F14FA8F120041660D /* PGCBase.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCBase.c; sourceTree = "<group>"; };
+		4C43977114FA92470041660D /* PGCArray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PGCArray.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4C43977214FA92520041660D /* PGCArray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = PGCArray.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		4C43977714FAE9A10041660D /* PGCNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCNull.h; sourceTree = "<group>"; };
+		4C43977914FAEA4F0041660D /* PGCNull.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCNull.c; sourceTree = "<group>"; };
+		4C43977D14FAFC6C0041660D /* PGCAutoreleasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCAutoreleasePool.h; sourceTree = "<group>"; };
+		4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCAutoreleasePool.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -18,12 +83,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4C43975114F837D80041660D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43975E14F83CF00041660D /* libPGCFoundation.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		4C43972314F7DDDC0041660D = {
 			isa = PBXGroup;
 			children = (
+				4C43973514F7DEA90041660D /* Base */,
+				4C43973914F7DEA90041660D /* Scalars */,
+				4C43973814F7DEA90041660D /* Collections */,
+				4C43975614F837D80041660D /* PGCFoundationTest */,
 				4C43972F14F7DDDC0041660D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -32,8 +109,64 @@
 			isa = PBXGroup;
 			children = (
 				4C43972E14F7DDDC0041660D /* libPGCFoundation.dylib */,
+				4C43975414F837D80041660D /* PGCFoundationTest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4C43973514F7DEA90041660D /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				4C43975F14F83D230041660D /* PGCFoundation.h */,
+				4C43976614F848C60041660D /* PGCBase.h */,
+				4C43976F14FA8F120041660D /* PGCBase.c */,
+				4C43977D14FAFC6C0041660D /* PGCAutoreleasePool.h */,
+				4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */,
+				4C43976314F8488F0041660D /* PGCClass.h */,
+				4C43976414F848A00041660D /* PGCClass.c */,
+				4C43973714F7DEA90041660D /* PGCObject.h */,
+				4C43973614F7DEA90041660D /* PGCObject.c */,
+			);
+			name = Base;
+			path = PGCFoundation/Base;
+			sourceTree = "<group>";
+		};
+		4C43973814F7DEA90041660D /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				4C43977114FA92470041660D /* PGCArray.h */,
+				4C43977214FA92520041660D /* PGCArray.c */,
+			);
+			name = Collections;
+			path = PGCFoundation/Collections;
+			sourceTree = "<group>";
+		};
+		4C43973914F7DEA90041660D /* Scalars */ = {
+			isa = PBXGroup;
+			children = (
+				4C43974514F80E770041660D /* PGCBoolean.h */,
+				4C43974414F80E770041660D /* PGCBoolean.c */,
+				4C43974114F7EF540041660D /* PGCCharacter.h */,
+				4C43974014F7EF540041660D /* PGCCharacter.c */,
+				4C43974914F820370041660D /* PGCDecimal.h */,
+				4C43974814F820370041660D /* PGCDecimal.c */,
+				4C43977714FAE9A10041660D /* PGCNull.h */,
+				4C43977914FAEA4F0041660D /* PGCNull.c */,
+				4C43974D14F824120041660D /* PGCInteger.h */,
+				4C43974C14F824120041660D /* PGCInteger.c */,
+				4C43976114F848060041660D /* PGCString.h */,
+				4C43976D14F8A22A0041660D /* PGCString.c */,
+			);
+			name = Scalars;
+			path = PGCFoundation/Scalars;
+			sourceTree = "<group>";
+		};
+		4C43975614F837D80041660D /* PGCFoundationTest */ = {
+			isa = PBXGroup;
+			children = (
+				4C43975714F837D80041660D /* main.c */,
+			);
+			path = PGCFoundationTest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -43,6 +176,18 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C43973D14F7DEA90041660D /* PGCObject.h in Headers */,
+				4C43974314F7EF540041660D /* PGCCharacter.h in Headers */,
+				4C43974714F80E770041660D /* PGCBoolean.h in Headers */,
+				4C43974B14F820370041660D /* PGCDecimal.h in Headers */,
+				4C43974F14F824120041660D /* PGCInteger.h in Headers */,
+				4C43976014F83D230041660D /* PGCFoundation.h in Headers */,
+				4C43976214F848060041660D /* PGCString.h in Headers */,
+				4C43976714F8491D0041660D /* PGCBase.h in Headers */,
+				4C43976814F849260041660D /* PGCClass.h in Headers */,
+				4C43977414FA92740041660D /* PGCArray.h in Headers */,
+				4C43977814FAE9A10041660D /* PGCNull.h in Headers */,
+				4C43977E14FAFC6C0041660D /* PGCAutoreleasePool.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,12 +211,30 @@
 			productReference = 4C43972E14F7DDDC0041660D /* libPGCFoundation.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		4C43975314F837D80041660D /* PGCFoundationTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C43975B14F837D80041660D /* Build configuration list for PBXNativeTarget "PGCFoundationTest" */;
+			buildPhases = (
+				4C43975014F837D80041660D /* Sources */,
+				4C43975114F837D80041660D /* Frameworks */,
+				4C43975214F837D80041660D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PGCFoundationTest;
+			productName = PGCFoundationTest;
+			productReference = 4C43975414F837D80041660D /* PGCFoundationTest */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		4C43972514F7DDDC0041660D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = PGC;
 				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Prachi Gauriar";
 			};
@@ -88,6 +251,7 @@
 			projectRoot = "";
 			targets = (
 				4C43972D14F7DDDC0041660D /* PGCFoundation */,
+				4C43975314F837D80041660D /* PGCFoundationTest */,
 			);
 		};
 /* End PBXProject section */
@@ -97,6 +261,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C43973C14F7DEA90041660D /* PGCObject.c in Sources */,
+				4C43974214F7EF540041660D /* PGCCharacter.c in Sources */,
+				4C43974614F80E770041660D /* PGCBoolean.c in Sources */,
+				4C43974A14F820370041660D /* PGCDecimal.c in Sources */,
+				4C43974E14F824120041660D /* PGCInteger.c in Sources */,
+				4C43976514F848A00041660D /* PGCClass.c in Sources */,
+				4C43976E14F8A22A0041660D /* PGCString.c in Sources */,
+				4C43977014FA8F120041660D /* PGCBase.c in Sources */,
+				4C43977314FA92520041660D /* PGCArray.c in Sources */,
+				4C43977A14FAEA4F0041660D /* PGCNull.c in Sources */,
+				4C43978014FAFE210041660D /* PGCAutoreleasePool.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43975014F837D80041660D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43975814F837D80041660D /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,7 +335,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include/PGCFoundation/Private;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/PGCFoundation;
 			};
 			name = Debug;
 		};
@@ -160,6 +345,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include/PGCFoundation/Private;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/PGCFoundation;
+			};
+			name = Release;
+		};
+		4C43975C14F837D80041660D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4C43975D14F837D80041660D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -183,6 +384,16 @@
 				4C43973414F7DDDC0041660D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C43975B14F837D80041660D /* Build configuration list for PBXNativeTarget "PGCFoundationTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43975C14F837D80041660D /* Debug */,
+				4C43975D14F837D80041660D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
