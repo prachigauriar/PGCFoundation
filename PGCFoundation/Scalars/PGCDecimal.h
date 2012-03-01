@@ -21,7 +21,7 @@ struct _PGCDecimal {
 };
 
 extern PGCClass *PGCDecimalClass(void);
-extern PGCDecimal *PGCDecimalNewWithValue(double value);
+extern PGCDecimal *PGCDecimalInstanceWithValue(double value);
 
 #pragma mark Basic Functions
 

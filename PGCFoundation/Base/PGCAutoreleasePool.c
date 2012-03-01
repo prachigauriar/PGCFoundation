@@ -13,12 +13,30 @@
 
 #pragma mark Private Global Variables
 
+/*!
+ @abstract Indicates whether the key for storing thread-specific autorelease pool stacks has been initialized.
+ @discussion This variable is set to true the first time PGCAutoreleasePoolCreate is called, provided that the thread key
+     could be successfully created. It is never set to false.
+ */
 static bool PGCAutoreleasePoolThreadKeyInitialized = false;
+
+/*!
+ @abstract The thread key used to store thread-specific autorelease stacks. 
+ @discussion This variable is initialized the first time PGCAutoreleasePoolCreate is called, provided that the thread key
+     could be successfully created. It is never destroyed.
+ */
 static pthread_key_t PGCAutoreleasePoolThreadKey;
 
 
 #pragma mark Private Data Types
 
+/*!
+ @typedef PGCAutoreleasePoolEntry
+ @abstract A singly-linked list node used to store objects in an autorelease pool.
+ @field next A pointer to the next node in the linked list; NULL if this node is the last item in the list.
+ @field object The object in the autorelease pool.
+ @discussion These structures are allocated in PGCAutoreleasePoolAddObject and freed in PGCAutoreleasePoolDestroy.
+ */
 typedef struct _PGCAutoreleasePoolEntry PGCAutoreleasePoolEntry;
 
 struct _PGCAutoreleasePoolEntry {
@@ -26,7 +44,19 @@ struct _PGCAutoreleasePoolEntry {
     PGCType object;
 };
 
+/*!
+ @abstract A doubly-linked stack node used to store autorelease pools.
+ @field previous A pointer to the previous pool in the stack; NULL if this node is at the top of the stack. 
+ @field next A pointer to the next pool in the stack; NULL if this node is at the bottom of the stack. 
+ @field entriesHead A pointer to the first autorelease pool entry in the pool’s objects to eventually release; NULL
+     if the pool contains no objects.
+ @field entriesHead A pointer to the last autorelease pool entry in the pool’s objects to eventually release; NULL
+     if the pool contains no objects.
+ @discussion The previous and next pointers are only modified by PGCAutoreleasePoolCreate and PGCAutoreleasePoolDestroy.
+     The entriesHead and entriesTail pointers are modified by PGCAutoreleasePoolAddObject. 
+ */
 struct _PGCAutoreleasePool {
+    PGCAutoreleasePool *previous;
     PGCAutoreleasePool *next;
     PGCAutoreleasePoolEntry *entriesHead;
     PGCAutoreleasePoolEntry *entriesTail;
@@ -35,9 +65,16 @@ struct _PGCAutoreleasePool {
 
 #pragma mark Private Function Interfaces
 
+/*!
+ @abstract Cleans up the autorelease pool stack when a thread terminates.
+ param threadVariable The terminating thread’s value for PGCAutoreleasePoolThreadKey, which is of type PGCAutoreleasePool.
+ @discussion If threadVariable is non-NULL, this function simply iterates over each of the pools in the specified stack
+     and essentially destroys them in the order they were placed on the autorelease pool stack.
+ */
 void PGCAutoreleasePoolThreadWasDestroyed(void *threadVariable);
 
 
+// FIXME: Add logging
 #pragma mark -
 
 PGCAutoreleasePool *PGCAutoreleasePoolCreate(void)
@@ -52,7 +89,10 @@ PGCAutoreleasePool *PGCAutoreleasePoolCreate(void)
     
     // Put the new pool at the top of the stack
     PGCAutoreleasePool *currentThreadPool = pthread_getspecific(PGCAutoreleasePoolThreadKey);
-    pool->next = currentThreadPool;
+    if (currentThreadPool) {
+        pool->next = currentThreadPool;
+        currentThreadPool->previous = pool;
+    }
     
     // Set our thread-specific pool to point to this one
     pthread_setspecific(PGCAutoreleasePoolThreadKey, pool);
@@ -75,11 +115,13 @@ void PGCAutoreleasePoolAddObject(PGCType instance)
     entry->object = instance;
     
     // Add our object to the pool's entry list
-    // If the pool has no entries, make this entry the first one
-    if (!pool->entriesHead) pool->entriesHead = entry;
-    
-    // If the pool has a tail, put our entry after it
-    if (pool->entriesTail) pool->entriesTail->next = entry;
+    if (!pool->entriesHead) {
+        // If the pool has no entries, make this entry the first one
+        pool->entriesHead = entry;
+    } else {
+        // Set our entry as the entry after the current tail
+        pool->entriesTail->next = entry;
+    }
     
     // Make our new entry the end of the entry list
     pool->entriesTail = entry;
@@ -91,14 +133,8 @@ void PGCAutoreleasePoolDestroy(PGCAutoreleasePool *pool)
     // If we haven't set up a pool or the specified pool is NULL, return
     if (!PGCAutoreleasePoolThreadKeyInitialized || !pool) return;
     
-    // Get the pool at the top of this thread's stack of pools
-    PGCAutoreleasePool *topPool = pthread_getspecific(PGCAutoreleasePoolThreadKey);
-    
-    // As long we're not the top of the pool stack, we need to drain all the pools above us on the stack
-    while (topPool != pool) {
-        PGCAutoreleasePoolDestroy(topPool);
-        topPool = pthread_getspecific(PGCAutoreleasePoolThreadKey);
-    }
+    // As long we're not the top of the pool stack, recursively destroy all the pools above us
+    if (pool->previous) PGCAutoreleasePoolDestroy(pool->previous);
 
     // Release each entry's object 
     PGCAutoreleasePoolEntry *entry = pool->entriesHead;
@@ -110,6 +146,7 @@ void PGCAutoreleasePoolDestroy(PGCAutoreleasePool *pool)
     }
     
     // Pop our pool off the stack and free up our memory
+    if (pool->next) pool->next->previous = NULL;
     pthread_setspecific(PGCAutoreleasePoolThreadKey, pool->next);
     free(pool);
 }
@@ -117,5 +154,25 @@ void PGCAutoreleasePoolDestroy(PGCAutoreleasePool *pool)
 
 void PGCAutoreleasePoolThreadWasDestroyed(void *threadVariable)
 {
-    PGCAutoreleasePoolDestroy(threadVariable);
+    PGCAutoreleasePool *pool = threadVariable;
+    while (pool) {
+        PGCAutoreleasePool *nextPool = pool->next;
+
+        // Below is effectively most of the body of PGCAutoreleasePoolDestroy without the call to pthread_setspecific, 
+        // as calling pthread_setspecific in the middle of a thread-specific destructor “may result in lost storage or
+        // infinite loops,” neither of which is desirable.
+        
+        // Release each entry's object 
+        PGCAutoreleasePoolEntry *entry = pool->entriesHead;
+        while (entry) {
+            PGCRelease(entry->object);
+            PGCAutoreleasePoolEntry *nextEntry = entry->next;
+            free(entry);
+            entry = nextEntry;
+        }
+        
+        // Free the pool itself
+        free(pool);
+        pool = nextPool;
+    }
 }

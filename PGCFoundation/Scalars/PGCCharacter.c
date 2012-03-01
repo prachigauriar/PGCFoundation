@@ -22,7 +22,7 @@ PGCClass *PGCCharacterClass(void)
 }
 
 
-PGCCharacter *PGCharacterNewWithValue(char value)
+PGCCharacter *PGCharacterInstanceWithValue(char value)
 {
     return PGCAutorelease(PGCCharacterInitWithValue(NULL, value));
 }
@@ -31,8 +31,8 @@ PGCCharacter *PGCharacterNewWithValue(char value)
 
 PGCCharacter *PGCCharacterInitWithValue(PGCCharacter *character, char value)
 {
-    if (!character && (character = PGCClassAllocateInstance(PGCCharacterClass())) == NULL) return NULL;
-    PGCObjectInitWithClass(&character->super, PGCCharacterClass());
+    if (!character && (character = PGCAlloc(PGCCharacterClass())) == NULL) return NULL;
+    PGCObjectInit(&character->super);
     character->value = value;
     return character;
 }
@@ -48,7 +48,7 @@ PGCType PGCCharacterCopy(PGCType instance)
 PGCString *PGCCharacterDescription(PGCType instance)
 {
     if (!instance || !PGCObjectIsKindOfClass(instance, PGCCharacterClass())) return NULL;
-    return PGCStringNewWithFormat("%c", ((PGCCharacter *)instance)->value);
+    return PGCStringInstanceWithFormat("%c", ((PGCCharacter *)instance)->value);
 }
 
 

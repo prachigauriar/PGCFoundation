@@ -33,7 +33,7 @@ PGCClass *PGCArrayClass(void)
 }
 
 
-PGCArray *PGCArrayNew(void)
+PGCArray *PGCArrayInstance(void)
 {
     return PGCAutorelease(PGCArrayInit(NULL));
 }
@@ -54,8 +54,8 @@ PGCArray *PGCArrayInitWithInitialCapacity(PGCArray *array, uint64_t initialCapac
 
 PGCArray *PGCArrayInitWithInitialCapacityAndIncrement(PGCArray *array, uint64_t initialCapacity, uint64_t increment)
 {
-    if (!array && (array = PGCClassAllocateInstance(PGCArrayClass())) == NULL) return NULL;
-    PGCObjectInitWithClass(&array->super, PGCArrayClass());
+    if (!array && (array = PGCAlloc(PGCArrayClass())) == NULL) return NULL;
+    PGCObjectInit(&array->super);
     
     array->count = 0;
     array->capacity = initialCapacity > 0 ? initialCapacity : PGCArrayDefaultInitialCapacity;
@@ -97,8 +97,8 @@ PGCType PGCArrayCopy(PGCType instance)
 PGCString *PGCArrayDescription(PGCType instance)
 {
     if (!instance || !PGCObjectIsKindOfClass(instance, PGCArrayClass())) return NULL;
-    PGCString *joinString = PGCArrayJoinComponentsWithString(instance, PGCStringNewWithCString(", "));
-    return PGCStringNewWithFormat("[%s]", PGCDescriptionCString(joinString));
+    PGCString *joinString = PGCArrayJoinComponentsWithString(instance, PGCStringInstanceWithCString(", "));
+    return PGCStringInstanceWithFormat("[%s]", PGCDescriptionCString(joinString));
 }
 
 
@@ -282,7 +282,7 @@ PGCString *PGCArrayJoinComponentsWithString(PGCArray *array, PGCString *separato
 {
     if (!array) return NULL;
     
-    PGCString *join = PGCStringNew();
+    PGCString *join = PGCStringInstance();
     for (uint64_t i = 0; i < array->count; i++) {
         PGCStringAppendString(join, PGCDescription(array->objects[i]));
         if (i != array->count - 1) PGCStringAppendString(join, separator);

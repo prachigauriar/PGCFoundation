@@ -34,6 +34,16 @@
 		4C43978014FAFE210041660D /* PGCAutoreleasePool.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4CBC763614FDA637003BE671 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C43972514F7DDDC0041660D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C43972D14F7DDDC0041660D;
+			remoteInfo = PGCFoundation;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		4C43975214F837D80041660D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -73,6 +83,7 @@
 		4C43977914FAEA4F0041660D /* PGCNull.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCNull.c; sourceTree = "<group>"; };
 		4C43977D14FAFC6C0041660D /* PGCAutoreleasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCAutoreleasePool.h; sourceTree = "<group>"; };
 		4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCAutoreleasePool.c; sourceTree = "<group>"; };
+		4C8C3FFE14FE84A2007F8A81 /* PGCFoundation.hdoc */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; name = PGCFoundation.hdoc; path = PGCFoundation/Documentation/PGCFoundation.hdoc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +108,7 @@
 		4C43972314F7DDDC0041660D = {
 			isa = PBXGroup;
 			children = (
+				4CBC763F14FDE340003BE671 /* Documentation */,
 				4C43973514F7DEA90041660D /* Base */,
 				4C43973914F7DEA90041660D /* Scalars */,
 				4C43973814F7DEA90041660D /* Collections */,
@@ -120,10 +132,10 @@
 				4C43975F14F83D230041660D /* PGCFoundation.h */,
 				4C43976614F848C60041660D /* PGCBase.h */,
 				4C43976F14FA8F120041660D /* PGCBase.c */,
-				4C43977D14FAFC6C0041660D /* PGCAutoreleasePool.h */,
-				4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */,
 				4C43976314F8488F0041660D /* PGCClass.h */,
 				4C43976414F848A00041660D /* PGCClass.c */,
+				4C43977D14FAFC6C0041660D /* PGCAutoreleasePool.h */,
+				4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */,
 				4C43973714F7DEA90041660D /* PGCObject.h */,
 				4C43973614F7DEA90041660D /* PGCObject.c */,
 			);
@@ -169,6 +181,14 @@
 			path = PGCFoundationTest;
 			sourceTree = "<group>";
 		};
+		4CBC763F14FDE340003BE671 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				4C8C3FFE14FE84A2007F8A81 /* PGCFoundation.hdoc */,
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -201,6 +221,7 @@
 				4C43972A14F7DDDC0041660D /* Sources */,
 				4C43972B14F7DDDC0041660D /* Frameworks */,
 				4C43972C14F7DDDC0041660D /* Headers */,
+				4CBC763E14FDDD50003BE671 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -222,6 +243,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4CBC763714FDA637003BE671 /* PBXTargetDependency */,
 			);
 			name = PGCFoundationTest;
 			productName = PGCFoundationTest;
@@ -256,6 +278,22 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4CBC763E14FDDD50003BE671 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "[ \"${GENERATE_DOCUMENTATION}\" = \"NO\" ] && exit 0\n\necho rm -rf \"${DOCUMENTATION_ROOT}\"\nrm -rf \"${DOCUMENTATION_ROOT}\"\n \nheaderdoc2html -q -o \"${DOCUMENTATION_ROOT}\" \"${SRCROOT}/${TARGET_NAME}/Documentation/${TARGET_NAME}.hdoc\" > /dev/null 2>&1 \nheaderdoc2html -q -o \"${DOCUMENTATION_ROOT}\" \"${BUILT_PRODUCTS_DIR}/${PUBLIC_HEADERS_PATH_DIR}\" > /dev/null 2>&1 \ngatherheaderdoc \"${DOCUMENTATION_ROOT}\" > /dev/null 2>&1 \n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4C43972A14F7DDDC0041660D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -284,6 +322,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4CBC763714FDA637003BE671 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C43972D14F7DDDC0041660D /* PGCFoundation */;
+			targetProxy = 4CBC763614FDA637003BE671 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4C43973014F7DDDC0041660D /* Debug */ = {
@@ -334,7 +380,9 @@
 		4C43973314F7DDDC0041660D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DOCUMENTATION_ROOT = "${SRCROOT}/${TARGET_NAME}/Documentation/HeaderDoc";
 				EXECUTABLE_PREFIX = lib;
+				GENERATE_DOCUMENTATION = NO;
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include/PGCFoundation/Private;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/PGCFoundation;
@@ -344,7 +392,9 @@
 		4C43973414F7DDDC0041660D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DOCUMENTATION_ROOT = "${SRCROOT}/${TARGET_NAME}/Documentation/HeaderDoc";
 				EXECUTABLE_PREFIX = lib;
+				GENERATE_DOCUMENTATION = YES;
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include/PGCFoundation/Private;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/PGCFoundation;

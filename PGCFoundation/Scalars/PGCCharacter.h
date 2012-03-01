@@ -21,7 +21,7 @@ struct _PGCCharacter {
 };
 
 extern PGCClass *PGCCharacterClass(void);
-extern PGCCharacter *PGCharacterNewWithValue(char value);
+extern PGCCharacter *PGCharacterInstanceWithValue(char value);
 
 #pragma mark Basic Functions
 extern PGCCharacter *PGCCharacterInitWithValue(PGCCharacter *character, char value);

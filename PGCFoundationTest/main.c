@@ -13,12 +13,12 @@ int main(int argc, const char * argv[])
 {
     PGCAutoreleasePool *pool = PGCAutoreleasePoolCreate();
 
-    PGCArray *array = PGCArrayNew();
+    PGCArray *array = PGCArrayInstance();
     for (uint64_t i = 0; i < 32; i++) {
-        PGCArrayPushObject(array, PGCIntegerNewWithUnsignedValue(i));
+        PGCArrayPushObject(array, PGCIntegerInstanceWithUnsignedValue(i));
     }
     
-    PGCArrayInsertObjectAtIndex(array, PGCNullInstance(), 1);
+    PGCArrayInsertObjectAtIndex(array, PGCNullInstance(), 16);
     
     printf("array = %s\n", PGCDescriptionCString(array));
     
@@ -31,7 +31,7 @@ int main(int argc, const char * argv[])
     pool = PGCAutoreleasePoolCreate();
     
     PGCString *string = PGCStringInitWithCString(NULL, "123456");
-    PGCString *cString = PGCStringNewWithCString("abc");
+    PGCString *cString = PGCStringInstanceWithCString("abc");
     
     printf("\nOriginally, string = \"%s\"\n", PGCDescriptionCString(string));
 

@@ -1,0 +1,15 @@
+//
+//  PGCFoundation.hdoc
+//  PGCFoundation
+//
+//  Created by Prachi Gauriar on 2/29/2012.
+//  Copyright (c) 2012 Prachi Gauriar. All rights reserved.
+//
+
+/*!
+ @framework PGCFoundation
+ @discussion The PGCFoundation framework provides a limited inheritance, polymorphic object system for C. Using this
+     system, it provides a variety of general purpose classes to simplify writing software in C. These classes use
+     reference counting to perform manual garbage collection, and include wrappers for many C primitives, dynamically 
+     resizable strings and arrays, linked lists, and dictionaries.
+ */

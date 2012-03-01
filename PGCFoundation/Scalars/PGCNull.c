@@ -35,8 +35,8 @@ PGCNull *PGCNullInstance(void)
 {
     static PGCNull *sharedInstance = NULL;
     if (!sharedInstance) {
-        sharedInstance = PGCClassAllocateInstance(PGCNullClass());
-        PGCObjectInitWithClass(&sharedInstance->super, PGCNullClass());   
+        sharedInstance = PGCAlloc(PGCNullClass());
+        PGCObjectInit(&sharedInstance->super);   
     }
     return sharedInstance;
 }
@@ -58,7 +58,7 @@ PGCType PGCNullCopy(PGCType instance)
 
 PGCString *PGCNullDescription(PGCType instance)
 {
-    return instance == PGCNullInstance() ? PGCStringNewWithCString("null") : NULL;
+    return instance == PGCNullInstance() ? PGCStringInstanceWithCString("null") : NULL;
 }
 
 

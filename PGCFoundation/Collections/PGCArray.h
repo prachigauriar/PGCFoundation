@@ -24,7 +24,7 @@ struct _PGCArray {
 };
 
 extern PGCClass *PGCArrayClass(void);
-extern PGCArray *PGCArrayNew(void);
+extern PGCArray *PGCArrayInstance(void);
 
 #pragma mark Basic Functions
 

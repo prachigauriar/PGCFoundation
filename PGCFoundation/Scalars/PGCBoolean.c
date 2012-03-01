@@ -35,7 +35,7 @@ PGCClass *PGCBooleanClass(void)
 PGCBoolean *PGCBooleanTrue(void)
 {
     static PGCBoolean *sharedTrue = NULL;
-    if (!sharedTrue) sharedTrue = PGCBooleanInitWithValue(PGCClassAllocateInstance(PGCBooleanClass()), true);
+    if (!sharedTrue) sharedTrue = PGCBooleanInitWithValue(PGCAlloc(PGCBooleanClass()), true);
     return sharedTrue;
 }
 
@@ -43,7 +43,7 @@ PGCBoolean *PGCBooleanTrue(void)
 PGCBoolean *PGCBooleanFalse(void)
 {
     static PGCBoolean *sharedFalse = NULL;
-    if (!sharedFalse) sharedFalse = PGCBooleanInitWithValue(PGCClassAllocateInstance(PGCBooleanClass()), false);
+    if (!sharedFalse) sharedFalse = PGCBooleanInitWithValue(PGCAlloc(PGCBooleanClass()), false);
     return sharedFalse;
 }
 
@@ -56,7 +56,7 @@ PGCBoolean *PGCBooleanInitWithValue(PGCBoolean *boolean, bool value)
     if (!boolean) return value ? PGCBooleanTrue() : PGCBooleanFalse();
     
     // Otherwise, initialize our superclass and set our value
-    PGCObjectInitWithClass(&boolean->super, PGCBooleanClass());
+    PGCObjectInit(&boolean->super);
     boolean->value = value;
     return boolean;
 }
@@ -77,7 +77,7 @@ PGCType PGCBooleanCopy(PGCType instance)
 PGCString *PGCBooleanDescription(PGCType instance)
 {
     if (!instance || !PGCObjectIsKindOfClass(instance, PGCBooleanClass())) return NULL;
-    return PGCStringNewWithCString((((PGCBoolean *)instance)->value ? "true" : "false"));
+    return PGCStringInstanceWithCString((((PGCBoolean *)instance)->value ? "true" : "false"));
 }
 
 

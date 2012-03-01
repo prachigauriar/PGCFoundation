@@ -22,7 +22,7 @@ PGCClass *PGCDecimalClass(void)
 }
 
 
-PGCDecimal *PGCDecimalNewWithValue(double value)
+PGCDecimal *PGCDecimalInstanceWithValue(double value)
 {
     return PGCAutorelease(PGCDecimalInitWithValue(NULL, value));
 }
@@ -32,8 +32,8 @@ PGCDecimal *PGCDecimalNewWithValue(double value)
 
 PGCDecimal *PGCDecimalInitWithValue(PGCDecimal *decimal, double value)
 {
-    if (!decimal && (decimal = PGCClassAllocateInstance(PGCDecimalClass())) == NULL) return NULL;
-    PGCObjectInitWithClass(&decimal->super, PGCDecimalClass());
+    if (!decimal && (decimal = PGCAlloc(PGCDecimalClass())) == NULL) return NULL;
+    PGCObjectInit(&decimal->super);
     decimal->value = value;
     return decimal;
 }
@@ -49,7 +49,7 @@ PGCType PGCDecimalCopy(PGCType instance)
 PGCString *PGCDecimalDescription(PGCType instance)
 {
     if (!instance || !PGCObjectIsKindOfClass(instance, PGCDecimalClass())) return NULL;
-    return PGCStringNewWithFormat("%f", ((PGCDecimal *)instance)->value);
+    return PGCStringInstanceWithFormat("%f", ((PGCDecimal *)instance)->value);
 }
 
 

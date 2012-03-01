@@ -25,8 +25,8 @@ struct _PGCInteger {
 };
 
 extern PGCClass *PGCIntegerClass(void);
-extern PGCInteger *PGCIntegerNewWithSignedValue(int64_t value);
-extern PGCInteger *PGCIntegerNewWithUnsignedValue(uint64_t value);
+extern PGCInteger *PGCIntegerInstanceWithSignedValue(int64_t value);
+extern PGCInteger *PGCIntegerInstanceWithUnsignedValue(uint64_t value);
 
 #pragma mark Basic Functions
 

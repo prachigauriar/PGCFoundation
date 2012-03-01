@@ -11,6 +11,25 @@
 #include <assert.h>
 #include <string.h>
 
+/*!
+ @struct _PGCClass
+ @abstract A metaclass data structure, which stores metadata about a class.
+ 
+ @field name The class’s name.
+ @field superclass A pointer to the class’s superclass data structure.
+ @field functions The class functions for the class.
+ @field instanceSize The size of a class instance.
+ 
+ @discussion Most details in this data structure are 
+ */
+struct _PGCClass {
+    const char *name;
+    PGCClass *superclass;
+    PGCClassFunctions functions;
+    uint64_t instanceSize;
+};
+
+
 #pragma mark Private Functions
 
 bool PGCClassFunctionsNoneNull(PGCClassFunctions functions)
@@ -71,6 +90,12 @@ PGCClass *PGCClassGetSuperclass(PGCClass *class)
 }
 
 
+PGCClassFunctions PGCClassGetClassFunctions(PGCClass *class)
+{
+    return class ? class->functions : (PGCClassFunctions){ NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+}
+
+
 uint64_t PGCClassGetInstanceSize(PGCClass *class)
 {
     return class ? class->instanceSize : 0;
@@ -87,16 +112,11 @@ PGCType PGCClassAllocateInstance(PGCClass *class)
 
 #pragma mark Class Introspection
 
-bool PGCClassIsSubclass(PGCClass *class, PGCClass *subclass)
+bool PGCClassIsSubclassOfClass(PGCClass *class1, PGCClass *class2)
 {
-    if (!class || !subclass) return false;
-    
-    PGCClass *classIterator = subclass;
-    while ((classIterator = classIterator->superclass)) {
-        if (classIterator == class) return true;
-    }
-    
-    return false;
+    if (!class1 || !class2) return false;
+    while ((class1 = class1->superclass) && (class1 != class2));
+    return class1;
 }
 
 

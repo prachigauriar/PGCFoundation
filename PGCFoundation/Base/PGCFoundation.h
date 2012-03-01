@@ -6,8 +6,14 @@
 //  Copyright (c) 2012 Prachi Gauriar. All rights reserved.
 //
 
-#ifndef PGCFoundation_PGCFoundation_h
-#define PGCFoundation_PGCFoundation_h
+#ifndef PGCFOUNDATION_H
+#define PGCFOUNDATION_H
+
+/*!
+ @header PGCFoundation
+ @discussion The PGCFoundation header simply includes all of the public header files in the PGCFoundation framework.
+     Users may simply include this header instead of each individual public header.
+ */
 
 #include <PGCFoundation/PGCBase.h>
 #include <PGCFoundation/PGCClass.h>

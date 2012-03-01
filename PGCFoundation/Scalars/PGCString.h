@@ -23,9 +23,9 @@ struct _PGCString {
 };
 
 extern PGCClass *PGCStringClass(void);
-extern PGCString *PGCStringNew(void);
-extern PGCString *PGCStringNewWithCString(const char *cString);
-extern PGCString *PGCStringNewWithFormat(const char *format, ...);
+extern PGCString *PGCStringInstance(void);
+extern PGCString *PGCStringInstanceWithCString(const char *cString);
+extern PGCString *PGCStringInstanceWithFormat(const char *format, ...);
 
 #pragma mark Basic Functions
 

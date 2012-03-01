@@ -22,13 +22,13 @@ PGCClass *PGCIntegerClass(void)
 }
 
 
-PGCInteger *PGCIntegerNewWithSignedValue(int64_t value)
+PGCInteger *PGCIntegerInstanceWithSignedValue(int64_t value)
 {
     return PGCAutorelease(PGCIntegerInitWithSignedValue(NULL, value));
 }
 
 
-PGCInteger *PGCIntegerNewWithUnsignedValue(uint64_t value)
+PGCInteger *PGCIntegerInstanceWithUnsignedValue(uint64_t value)
 {
     return PGCAutorelease(PGCIntegerInitWithUnsignedValue(NULL, value));
 }
@@ -38,8 +38,8 @@ PGCInteger *PGCIntegerNewWithUnsignedValue(uint64_t value)
 
 PGCInteger *PGCIntegerInitWithSignedValue(PGCInteger *integer, int64_t value)
 {
-    if (!integer && (integer = PGCClassAllocateInstance(PGCIntegerClass())) == NULL) return NULL;
-    PGCObjectInitWithClass(&integer->super, PGCIntegerClass());
+    if (!integer && (integer = PGCAlloc(PGCIntegerClass())) == NULL) return NULL;
+    PGCObjectInit(&integer->super);
     integer->isSigned = true;
     integer->value.signedValue = value;
     return integer;
@@ -48,8 +48,8 @@ PGCInteger *PGCIntegerInitWithSignedValue(PGCInteger *integer, int64_t value)
 
 PGCInteger *PGCIntegerInitWithUnsignedValue(PGCInteger *integer, uint64_t value)
 {
-    if (!integer && (integer = PGCClassAllocateInstance(PGCIntegerClass())) == NULL) return NULL;
-    PGCObjectInitWithClass(&integer->super, PGCIntegerClass());
+    if (!integer && (integer = PGCAlloc(PGCIntegerClass())) == NULL) return NULL;
+    PGCObjectInit(&integer->super);
     integer->isSigned = false;
     integer->value.unsignedValue = value;
     return integer;
@@ -72,7 +72,11 @@ PGCString *PGCIntegerDescription(PGCType instance)
 {
     if (!instance || !PGCObjectIsKindOfClass(instance, PGCIntegerClass())) return NULL;
     PGCInteger *integer = instance; 
-    return integer->isSigned ? PGCStringNewWithFormat("%lld", integer->value.signedValue) : PGCStringNewWithFormat("%llu", integer->value.unsignedValue);
+    if (integer->isSigned) { 
+        return PGCStringInstanceWithFormat("%lld", integer->value.signedValue); 
+    } else {
+        return PGCStringInstanceWithFormat("%llu", integer->value.unsignedValue);
+    }
 }
 
 

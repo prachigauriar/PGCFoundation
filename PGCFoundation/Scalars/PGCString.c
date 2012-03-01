@@ -35,19 +35,19 @@ PGCClass *PGCStringClass(void)
 }
 
 
-PGCString *PGCStringNew(void)
+PGCString *PGCStringInstance(void)
 {
     return PGCAutorelease(PGCStringInit(NULL));
 }
 
 
-PGCString *PGCStringNewWithCString(const char *cString)
+PGCString *PGCStringInstanceWithCString(const char *cString)
 {
     return PGCAutorelease(PGCStringInitWithCString(NULL, cString));
 }
 
 
-PGCString *PGCStringNewWithFormat(const char *format, ...)
+PGCString *PGCStringInstanceWithFormat(const char *format, ...)
 {
     if (!format) return NULL;
     va_list arguments;
@@ -64,8 +64,8 @@ PGCString *PGCStringNewWithFormat(const char *format, ...)
 
 PGCString *PGCStringInit(PGCString *string)
 {
-    if (!string && (string = PGCClassAllocateInstance(PGCStringClass())) == NULL) return NULL;
-    PGCObjectInitWithClass(&string->super, PGCStringClass());
+    if (!string && (string = PGCAlloc(PGCStringClass())) == NULL) return NULL;
+    PGCObjectInit(&string->super);
 
     string->length = 0;
     string->capacity = PGCStringDefaultCapacity;
@@ -82,8 +82,8 @@ PGCString *PGCStringInit(PGCString *string)
 PGCString *PGCStringInitWithCString(PGCString *string, const char *cString)
 {
     if (!cString) return PGCStringInit(string);
-    if (!string && (string = PGCClassAllocateInstance(PGCStringClass())) == NULL) return NULL;
-    PGCObjectInitWithClass(&string->super, PGCStringClass());
+    if (!string && (string = PGCAlloc(PGCStringClass())) == NULL) return NULL;
+    PGCObjectInit(&string->super);
 
     string->buffer = strdup(cString);
     string->length = strlen(string->buffer);
