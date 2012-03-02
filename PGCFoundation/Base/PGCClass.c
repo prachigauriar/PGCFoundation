@@ -11,16 +11,15 @@
 #include <assert.h>
 #include <string.h>
 
+#pragma mark Private Data Structures
+
 /*!
  @struct _PGCClass
  @abstract A metaclass data structure, which stores metadata about a class.
- 
  @field name The class’s name.
  @field superclass A pointer to the class’s superclass data structure.
  @field functions The class functions for the class.
  @field instanceSize The size of a class instance.
- 
- @discussion Most details in this data structure are 
  */
 struct _PGCClass {
     const char *name;

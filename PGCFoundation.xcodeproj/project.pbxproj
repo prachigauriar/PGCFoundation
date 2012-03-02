@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C1FB4191500427A00ADE7B5 /* PGCList.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1FB4181500427A00ADE7B5 /* PGCList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C1FB41B1500428B00ADE7B5 /* PGCList.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C1FB41A1500428B00ADE7B5 /* PGCList.c */; };
 		4C43973C14F7DEA90041660D /* PGCObject.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43973614F7DEA90041660D /* PGCObject.c */; };
 		4C43973D14F7DEA90041660D /* PGCObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43973714F7DEA90041660D /* PGCObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C43974214F7EF540041660D /* PGCCharacter.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43974014F7EF540041660D /* PGCCharacter.c */; };
@@ -57,6 +59,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4C1FB4181500427A00ADE7B5 /* PGCList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCList.h; sourceTree = "<group>"; };
+		4C1FB41A1500428B00ADE7B5 /* PGCList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCList.c; sourceTree = "<group>"; };
 		4C43972E14F7DDDC0041660D /* libPGCFoundation.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libPGCFoundation.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C43973614F7DEA90041660D /* PGCObject.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCObject.c; sourceTree = "<group>"; };
 		4C43973714F7DEA90041660D /* PGCObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCObject.h; sourceTree = "<group>"; };
@@ -148,6 +152,8 @@
 			children = (
 				4C43977114FA92470041660D /* PGCArray.h */,
 				4C43977214FA92520041660D /* PGCArray.c */,
+				4C1FB4181500427A00ADE7B5 /* PGCList.h */,
+				4C1FB41A1500428B00ADE7B5 /* PGCList.c */,
 			);
 			name = Collections;
 			path = PGCFoundation/Collections;
@@ -208,6 +214,7 @@
 				4C43977414FA92740041660D /* PGCArray.h in Headers */,
 				4C43977814FAE9A10041660D /* PGCNull.h in Headers */,
 				4C43977E14FAFC6C0041660D /* PGCAutoreleasePool.h in Headers */,
+				4C1FB4191500427A00ADE7B5 /* PGCList.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +317,7 @@
 				4C43977314FA92520041660D /* PGCArray.c in Sources */,
 				4C43977A14FAEA4F0041660D /* PGCNull.c in Sources */,
 				4C43978014FAFE210041660D /* PGCAutoreleasePool.c in Sources */,
+				4C1FB41B1500428B00ADE7B5 /* PGCList.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

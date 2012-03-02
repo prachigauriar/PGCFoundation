@@ -75,7 +75,7 @@ void PGCArrayDealloc(PGCType instance)
     if (!instance || !PGCObjectIsKindOfClass(instance, PGCArrayClass())) return;
     PGCArray *array = instance;
     if (array->objects) {
-        for (uint64_t i = 0; i < array->count; i++) PGCRelease(array->objects[i]);
+        PGCArrayRemoveAllObjects(array);
         free(array->objects);
     }
     PGCSuperclassDealloc(array);
@@ -87,8 +87,8 @@ PGCType PGCArrayCopy(PGCType instance)
     if (!instance || !PGCObjectIsKindOfClass(instance, PGCArrayClass())) return NULL;
     PGCArray *array = instance;
     
-    PGCArray *copy = PGCArrayInitWithInitialCapacityAndIncrement(array, array->count, 0);
-    for (uint64_t i = 0; i < array->count; i++) PGCArrayAddObject(copy, array->objects[i]);
+    PGCArray *copy = PGCArrayInitWithInitialCapacityAndIncrement(NULL, array->count, 0);
+    for (uint64_t i = 0; i < array->count; i++) PGCArrayAddObject(copy, PGCArrayGetObjectAtIndex(array, i));
     
     return copy;
 }
@@ -112,8 +112,11 @@ bool PGCArrayEquals(PGCType instance1, PGCType instance2)
     if (array1->count != array2->count) return false;
         
     for (uint64_t i = 0; i < array1->count; i++) {
-        if (PGCHash(array1->objects[i]) != PGCHash(array2->objects[i])) return false;
-        if (!PGCEquals(array1->objects[i], array2->objects[i])) return false;
+        PGCType arrayObject1 = PGCArrayGetObjectAtIndex(array1, i);
+        PGCType arrayObject2 = PGCArrayGetObjectAtIndex(array2, i);
+        
+        if (PGCHash(arrayObject1) != PGCHash(arrayObject2)) return false;
+        if (!PGCEquals(arrayObject1, arrayObject2)) return false;
     }
     
     return true;
@@ -131,8 +134,8 @@ uint64_t PGCArrayHash(PGCType instance)
     // array of characters
     uint64_t hash = 5381 + array->count;
     for (uint64_t i = 0; i < array->count; i++) {
-        // Set hash to hash * 33 + the current character's value
-        hash = ((hash << 5) + hash) + PGCHash(array->objects[i]);
+        // Set hash to hash * 33 + the current element's value
+        hash = ((hash << 5) + hash) + PGCHash(PGCArrayGetObjectAtIndex(array, i));
     }
     
     return hash;
@@ -177,7 +180,8 @@ uint64_t PGCArrayGetIndexOfObject(PGCArray *array, PGCType instance)
 
     uint64_t instanceHash = PGCHash(instance);
     for (uint64_t i = 0; i < array->count; i++) {
-        if (PGCHash(array->objects[i]) == instanceHash && PGCEquals(instance, array->objects[i])) return i;
+        PGCType object = PGCArrayGetObjectAtIndex(array, i);
+        if (PGCHash(object) == instanceHash && PGCEquals(instance, object)) return i;
     }
     
     return PGCNotFound;
@@ -187,7 +191,7 @@ uint64_t PGCArrayGetIndexOfObject(PGCArray *array, PGCType instance)
 uint64_t PGCArrayGetIndexOfIdenticalObject(PGCArray *array, PGCType instance)
 {
     if (!array || !instance || array->count == 0) return PGCNotFound;
-    for (uint64_t i = 0; i < array->count; i++) if (array->objects[i] == instance) return i;
+    for (uint64_t i = 0; i < array->count; i++) if (PGCArrayGetObjectAtIndex(array, i) == instance) return i;
     return PGCNotFound;
 }
 
@@ -284,7 +288,7 @@ PGCString *PGCArrayJoinComponentsWithString(PGCArray *array, PGCString *separato
     
     PGCString *join = PGCStringInstance();
     for (uint64_t i = 0; i < array->count; i++) {
-        PGCStringAppendString(join, PGCDescription(array->objects[i]));
+        PGCStringAppendString(join, PGCDescription(PGCArrayGetObjectAtIndex(array, i)));
         if (i != array->count - 1) PGCStringAppendString(join, separator);
     }
     

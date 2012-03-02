@@ -28,7 +28,7 @@ static bool PGCAutoreleasePoolThreadKeyInitialized = false;
 static pthread_key_t PGCAutoreleasePoolThreadKey;
 
 
-#pragma mark Private Data Types
+#pragma mark Private Types and Data Structures
 
 /*!
  @typedef PGCAutoreleasePoolEntry
@@ -38,7 +38,6 @@ static pthread_key_t PGCAutoreleasePoolThreadKey;
  @discussion These structures are allocated in PGCAutoreleasePoolAddObject and freed in PGCAutoreleasePoolDestroy.
  */
 typedef struct _PGCAutoreleasePoolEntry PGCAutoreleasePoolEntry;
-
 struct _PGCAutoreleasePoolEntry {
     PGCAutoreleasePoolEntry *next;
     PGCType object;

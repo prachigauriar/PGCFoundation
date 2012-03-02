@@ -26,6 +26,7 @@
 #include <stdlib.h>
 
 #pragma mark Types
+
 /*!
  @abstract The base type for PGCFoundation objects. 
  @discussion PGCType should be used when a function argument or return value can by polymorphic, as it eliminates the need for type  

@@ -11,10 +11,40 @@
 
 #include <string.h>
 
+/*!
+ @struct _PGCNull
+ @abstract PGCNull’s corresponding data structure.
+ @field super The instance’s superclass’s fields.
+ @discussion This is about as minimal as a PGCObject subclass can be. Nothing ever get referenced within this class.
+ */
+struct _PGCNull {
+    PGCObject super;
+};
+
+
 #pragma mark Private Function Interfaces
 
+/*!
+ @abstract Does nothing.
+ @param instance The PGCNull object that would be deallocated, if this function did anything.
+ @discussion This function does nothing because the class is a singleton, and as such, we never want the allocated instance to be
+     deallocated.
+ */
 void PGCNullDealloc(PGCType instance);
+
+/*!
+ @abstract Does nothing.
+ @param instance The PGCNull object to release, if this function did anything.
+ @discussion This function does nothing because the class is a singleton, and as such, we never wants its reference count to reach 0.
+ */
 void PGCNullRelease(PGCType instance);
+
+/*!
+ @abstract Does nothing.
+ @param instance The PGCNull object to retain, if this function did anything.
+ @result The instance that was passed to it.
+ @discussion This function does nothing because the class is a singleton, and as such, we never wants its reference count to change.
+ */
 PGCType PGCNullRetain(PGCType instance);
 
 
@@ -51,8 +81,7 @@ void PGCNullDealloc(PGCType instance)
 
 PGCType PGCNullCopy(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCNullClass())) return NULL;
-    return instance;
+    return instance == PGCNullInstance() ? instance : NULL;
 }
 
 

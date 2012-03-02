@@ -25,17 +25,15 @@
 #pragma mark - PGCObject 
 
 /*!
- @class PGCObject
- @abstract The PGCObject, which is a root class and the base class for all PGCFoundation objects.
- @field isa The class of the object. 
- @field retainCount The object’s reference count.
- @discussion Like other classes in PGCFoundation, all objects should be allocated on the heap using either PGCClassAllocateInstance
-     or the class’s initializer, which simply calls PGCClassAllocateInstance for you. A raw PGCObject struct should never be used
-     except as the first field of a direct subclass’s struct definition in order to support structural subtyping.
+ @typedef PGCObject
+ @abstract The PGCObject class, which is a root class and the base class for all PGCFoundation objects.
+ @discussion Like other classes in PGCFoundation, all objects should be allocated on the heap using either PGCAlloc or the
+     class’s initializer with a NULL first argument, which simply calls PGCAlloc for you. A raw PGCObject struct should never
+     be used except as the first field of a direct subclass’s struct definition in order to support structural subtyping.
  
      Also, as is the case with all PGCFoundation classes, the internal fields of PGCObject should never be accessed directly. In
      fact, we would prefer to not even expose the field names, but we must in order to support structural subtyping. To get the
-     values of a PGCObject, use its accessor functions.
+     instance variables of a PGCObject, use its accessor functions.
  */
 typedef struct _PGCObject PGCObject;
 struct _PGCObject {
@@ -68,12 +66,13 @@ extern PGCClass *PGCObjectClass();
 */
 extern PGCType PGCAlloc(PGCClass *class);
 
+
 #pragma mark Basic Functions
 
 /*!
  @abstract Initializes the specified PGCObject.
  @param object The PGCObject to initialize.
- @result The PGCObject that was initialized or NULL if an error occurred during initialization.
+ @result The PGCObject that was initialized; returns NULL if an error occurred during initialization.
  @discussion In reality, this function does nothing but return the argument that it was passed. That may change in the future, however, so 
      subclasses should call this initializer in their initializer functions. 
  */
@@ -116,12 +115,13 @@ extern void PGCObjectRelease(PGCType instance);
  */
 extern PGCType PGCObjectRetain(PGCType instance);
 
+
 #pragma mark Class Introspection
 
 /*!
  @abstract Returns the object’s class.
  @param instance The object whose class is to be returned.
- @result The object’s class or NULL if instance is NULL.
+ @result The object’s class; returns NULL if instance is NULL.
  */
 extern PGCClass *PGCObjectGetClass(PGCType instance);
 

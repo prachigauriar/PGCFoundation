@@ -104,6 +104,7 @@ struct _PGCClassFunctions {
  */
 typedef struct _PGCClass PGCClass;
 
+
 #pragma mark Creation and Deallocation
 
 /*!
@@ -132,7 +133,7 @@ extern void PGCClassDestroy(PGCClass *class);
 /*!
  @abstract Returns the name of the specified class.
  @param class The class.
- @result The name of the class or NULL if class was NULL.
+ @result The name of the class; returns NULL if class was NULL.
  @discussion This function does not transfer ownership of its return value’s memory; it still belongs to the class itself.
  */
 extern const char *PGCClassGetName(PGCClass *class);
@@ -140,7 +141,7 @@ extern const char *PGCClassGetName(PGCClass *class);
 /*!
  @abstract Returns the superclass of the specified class.
  @param class The class.
- @result The superclass of the class or NULL if class was NULL.
+ @result The superclass of the class; returns NULL if class was NULL.
  */
 extern PGCClass *PGCClassGetSuperclass(PGCClass *class);
 
@@ -191,63 +192,63 @@ extern bool PGCClassIsSubclassOfClass(PGCClass *class1, PGCClass *class2);
 /*!
  @abstract Returns a pointer to the Copy function implementation for the specified class.
  @param class The class
- @result The Copy function for the specified class or NULL if class is NULL. 
- @discussion The function returned may not be the same as the function used to initialize the class. Specifically, if a NULL function 
-     was specified at class creation, a pointer to the inherited function implementation is returned.
+ @result The Copy function for the specified class; returns NULL if class is NULL. The function returned may not be the 
+     same as the function used to initialize the class. Specifically, if a NULL function was specified at class creation, 
+     a pointer to the inherited function implementation is returned.
  */
 extern PGCCopyFunction *PGCClassGetCopyFunction(PGCClass *class);
 
 /*!
  @abstract Returns a pointer to the Dealloc function implementation for the specified class.
  @param class The class
- @result The Dealloc function for the specified class or NULL if class is NULL. 
- @discussion The function returned may not be the same as the function used to initialize the class. Specifically, if a NULL function 
-     was specified at class creation, a pointer to the inherited function implementation is returned.
+ @result The Dealloc function for the specified class; returns NULL if class is NULL. The function returned may not be the
+     same as the function used to initialize the class. Specifically, if a NULL function was specified at class creation, 
+     a pointer to the inherited function implementation is returned.
  */
 extern PGCDeallocFunction *PGCClassGetDeallocFunction(PGCClass *class);
 
 /*!
  @abstract Returns a pointer to the Description function implementation for the specified class.
  @param class The class
- @result The Description function for the specified class or NULL if class is NULL. 
- @discussion The function returned may not be the same as the function used to initialize the class. Specifically, if a NULL function 
-     was specified at class creation, a pointer to the inherited function implementation is returned.
+ @result The Description function for the specified class; returns NULL if class is NULL. The function returned may not 
+     be the same as the function used to initialize the class. Specifically, if a NULL function was specified at class
+     creation, a pointer to the inherited function implementation is returned.
  */
 extern PGCDescriptionFunction *PGCClassGetDescriptionFunction(PGCClass *class);
 
 /*!
  @abstract Returns a pointer to the Equals function implementation for the specified class.
  @param class The class
- @result The Equals function for the specified class or NULL if class is NULL. 
- @discussion The function returned may not be the same as the function used to initialize the class. Specifically, if a NULL function 
-     was specified at class creation, a pointer to the inherited function implementation is returned.
+ @result The Equals function for the specified class; returns NULL if class is NULL. The function returned may not be
+     the same as the function used to initialize the class. Specifically, if a NULL function was specified at class
+     creation, a pointer to the inherited function implementation is returned.
  */
 extern PGCEqualsFunction *PGCClassGetEqualsFunction(PGCClass *class);
 
 /*!
  @abstract Returns a pointer to the Hash function implementation for the specified class.
  @param class The class
- @result The Hash function for the specified class or NULL if class is NULL. 
- @discussion The function returned may not be the same as the function used to initialize the class. Specifically, if a NULL function 
-     was specified at class creation, a pointer to the inherited function implementation is returned.
+ @result The Hash function for the specified class; returns NULL if class is NULL. The function returned may not be
+     the same as the function used to initialize the class. Specifically, if a NULL function was specified at class
+     creation, a pointer to the inherited function implementation is returned.
  */
 extern PGCHashFunction *PGCClassGetHashFunction(PGCClass *class);
 
 /*!
  @abstract Returns a pointer to the Release function implementation for the specified class.
  @param class The class
- @result The Release function for the specified class or NULL if class is NULL. 
- @discussion The function returned may not be the same as the function used to initialize the class. Specifically, if a NULL function 
-     was specified at class creation, a pointer to the inherited function implementation is returned.
+ @result The Release function for the specified class; returns NULL if class is NULL. The function returned may not be the
+     same as the function used to initialize the class. Specifically, if a NULL function was specified at class creation, 
+     a pointer to the inherited function implementation is returned.
  */
 extern PGCReleaseFunction *PGCClassGetReleaseFunction(PGCClass *class);
 
 /*!
  @abstract Returns a pointer to the Retain function implementation for the specified class.
  @param class The class
- @result The Retain function for the specified class or NULL if class is NULL. 
- @discussion The function returned may not be the same as the function used to initialize the class. Specifically, if a NULL function 
-     was specified at class creation, a pointer to the inherited function implementation is returned.
+ @result The Retain function for the specified class; returns NULL if class is NULL. The function returned may not be the
+     same as the function used to initialize the class. Specifically, if a NULL function was specified at class creation, 
+     a pointer to the inherited function implementation is returned.
  */
 extern PGCRetainFunction *PGCClassGetRetainFunction(PGCClass *class);
 
