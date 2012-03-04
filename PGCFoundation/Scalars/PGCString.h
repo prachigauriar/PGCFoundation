@@ -14,14 +14,6 @@
 
 #pragma mark - PGCString
 
-struct _PGCString {
-    PGCObject super;
-
-    char *buffer;
-    uint64_t capacity;
-    uint64_t length;
-};
-
 extern PGCClass *PGCStringClass(void);
 extern PGCString *PGCStringInstance(void);
 extern PGCString *PGCStringInstanceWithCString(const char *cString);
@@ -43,14 +35,33 @@ extern uint64_t PGCStringHash(PGCType instance);
 extern const char *PGCStringGetCString(PGCString *string);
 extern uint64_t PGCStringGetLength(PGCString *string);
 extern char PGCStringGetCharacterAtIndex(PGCString *string, uint64_t index);
+extern void PGCStringSetCharacterAtIndex(PGCString *string, char character, uint64_t index);
+
+#pragma mark String Case
+
+extern PGCString *PGCStringGetLowercaseString(PGCString *string);
+extern PGCString *PGCStringGetUppercaseString(PGCString *string);
 
 //extern PGCArray *PGCSplitStringOnSeparator(PGCString *string, PGCString *separator);
- 
+
+#pragma mark Substrings
+
+extern PGCString *PGCStringGetSubstringToIndex(PGCString *string, uint64_t index);
+extern PGCString *PGCStringGetSubstringWithRange(PGCString *string, PGCRange range);
+extern PGCString *PGCStringGetSubstringFromIndex(PGCString *string, uint64_t index);
+
+//#pragma mark String replacement
+//
+//extern void PGCStringReplaceCharactersInRangeWithString(PGCString *string, PGCRange range, PGCString *replacementString);
+//extern void PGCStringReplaceSubstringWithString(PGCString *string, PGCString *substring, PGCString *replacementString);
+
 #pragma mark Inserting Strings
 
 extern void PGCStringPrependString(PGCString *string, PGCString *prependString);
 extern void PGCStringInsertStringAtIndex(PGCString *string, PGCString *insertString, uint64_t index);
 extern void PGCStringAppendString(PGCString *string, PGCString *appendString);
 extern void PGCStringAppendFormat(PGCString *string, const char *format, ...);
+
+// PGCStringRemoveCharactersInRange
 
 #endif

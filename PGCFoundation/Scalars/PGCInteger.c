@@ -11,6 +11,23 @@
 
 #include <stdio.h>
 
+/*!
+ @struct _PGCInteger
+ @abstract PGCInteger’s corresponding data structure.
+ @field super The instance’s superclass’s fields.
+ @field isSigned Whether the instance was initialized using a signed integer or not.
+ @field value A union storing the instance’s value as either a signed value (signedValue) or an unsigned value (unsignedValue).
+ */
+struct _PGCInteger {
+    PGCObject super;
+    bool isSigned;
+    union _PGCIntegerValue {
+        int64_t signedValue;
+        uint64_t unsignedValue;        
+    } value;
+};
+
+
 PGCClass *PGCIntegerClass(void)
 {
     static PGCClass *integerClass = NULL;

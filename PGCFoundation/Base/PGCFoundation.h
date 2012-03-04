@@ -28,6 +28,7 @@
 #include <PGCFoundation/PGCString.h>
 
 #include <PGCFoundation/PGCArray.h>
+#include <PGCFoundation/PGCDictionary.h>
 #include <PGCFoundation/PGCList.h>
 
 #endif

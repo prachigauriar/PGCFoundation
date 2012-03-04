@@ -27,15 +27,9 @@
      
      The value of a PGCCharacter can be gotten using @link PGCCharacterGetValue @/link.
 
-     As is the case with all PGCFoundation classes, the internal fields of PGCCharacter should never be accessed directly. In
-     fact, we would prefer to not even expose the field names, but we must in order to support structural subtyping. To get the
-     values of a PGCCharacter’s instance variables, use its accessor functions.
+     PGCCharacter is not meant to be subclassed. As such, we do not expose the details of its data structure.
  */
 typedef struct _PGCCharacter PGCCharacter;
-struct _PGCCharacter {
-    PGCObject super;
-    char value;
-};
 
 /*!
  @abstract Returns the class data structure for PGCCharacter.
@@ -48,7 +42,7 @@ extern PGCClass *PGCCharacterClass(void);
  @param value The character value.
  @result A newly created, autoreleased PGCCharacter object with the specified character value; returns NULL if creation failed.
  */
-extern PGCCharacter *PGCharacterInstanceWithValue(char value);
+extern PGCCharacter *PGCCharacterInstanceWithValue(char value);
 
 
 #pragma mark Basic Functions

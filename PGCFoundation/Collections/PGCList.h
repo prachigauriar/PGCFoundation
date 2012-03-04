@@ -12,35 +12,19 @@
 #include <PGCFoundation/PGCObject.h>
 #include <PGCFoundation/PGCString.h>
 
-#pragma mark - PGCListNode
-
-typedef struct _PGCListNode PGCListNode;
-struct _PGCListNode {
-    PGCListNode *previous;
-    PGCListNode *next;
-    PGCType object;
-};
-
 #pragma mark - PGCList
 
 typedef struct _PGCList PGCList;
-struct _PGCList {
-    PGCObject super;
-    
-    PGCListNode *head;
-    PGCListNode *tail;
-    PGCListNode *current;
-    
-    uint64_t count;
-    uint64_t currentIndex;
-};
 
 extern PGCClass *PGCListClass(void);
 extern PGCList *PGCListInstance(void);
+extern PGCList *PGCListWithObjects(PGCType object1, ...);
 
 #pragma mark Basic Functions
 
 extern PGCList *PGCListInit(PGCList *list);
+extern PGCList *PGCListInitWithObjects(PGCList *list, PGCType object1, ...);
+
 extern PGCType PGCListCopy(PGCType instance);
 extern PGCString *PGCListDescription(PGCType instance);
 extern bool PGCListEquals(PGCType instance1, PGCType instance2);
@@ -56,7 +40,13 @@ extern PGCType PGCListGetFirstObject(PGCList *list);
 extern PGCType PGCListGetLastObject(PGCList *list);
 
 extern uint64_t PGCListGetIndexOfObject(PGCList *list, PGCType instance);
+extern uint64_t PGCListGetIndexOfObjectInRange(PGCList *list, PGCType instance, PGCRange range);
 extern uint64_t PGCListGetIndexOfIdenticalObject(PGCList *list, PGCType instance);
+extern uint64_t PGCListGetIndexOfIdenticalObjectInRange(PGCList *list, PGCType instance, PGCRange range);
+
+#pragma mark Sublists
+
+extern PGCList *PGCListSublistWithRange(PGCList *list, PGCRange range);
 
 #pragma mark Object Addition, Replacement, and Removal
 

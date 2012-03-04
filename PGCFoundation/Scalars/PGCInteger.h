@@ -27,19 +27,9 @@
      
      The value of a PGCInteger can be gotten using @link PGCIntegerGetSignedValue @/link or @link PGCIntegerGetUnsignedValue @/link.
      
-     As is the case with all PGCFoundation classes, the internal fields of PGCInteger should never be accessed directly. In
-     fact, we would prefer to not even expose the field names, but we must in order to support structural subtyping. To get the
-     values of a PGCInteger’s instance variables, use its accessor functions.
+     PGCInteger is not meant to be subclassed. As such, we do not expose the details of its data structure.
  */
 typedef struct _PGCInteger PGCInteger;
-struct _PGCInteger {
-    PGCObject super;
-    bool isSigned;
-    union _PGCIntegerValue {
-        int64_t signedValue;
-        uint64_t unsignedValue;        
-    } value;
-};
 
 /*!
  @abstract Returns the class data structure for PGCInteger.

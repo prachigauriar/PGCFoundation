@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#pragma mark Types
+#pragma mark Types and Data Structures
 
 /*!
  @abstract The base type for PGCFoundation objects. 
@@ -36,6 +36,13 @@
 typedef void *PGCType;
 
 /*!
+ @abstract The type for the PGCString class.
+ @discussion Except when subclassing PGCString, users should always use pointers to PGCStrings. This type is defined here instead of 
+     in @link PGCString.h @/link because the PGCString needs to be defined for Description functions.
+ */
+typedef struct _PGCString PGCString;
+
+/*!
  @abstract A special value to denote that some object or value could not be found. 
  @discussion PGCNotFound is typically returned by a function, e.g., @link PGCArrayGetIndexOfObject @/link, when a search failed to find
      any results.
@@ -43,10 +50,17 @@ typedef void *PGCType;
 extern const uint64_t PGCNotFound;
 
 /*!
- @abstract The type for the PGCString class.
- @discussion Except when subclassing PGCString, users should always use pointers to PGCStrings.
+ @abstract The range type, which stores the starting point and length of a discrete range.
+ @field location The starting location of the range.
+ @field length The length of the range.
+ @discussion Ranges are primarily useful for expressing ranges of indices in strings, lists, and arrays. A PGCRange with a location
+     of PGCNotFound and a length of 0 typically denotes an invalid range.
  */
-typedef struct _PGCString PGCString;
+typedef struct _PGCRange PGCRange;
+struct _PGCRange {
+    uint64_t location;
+    uint64_t length;
+}; 
 
 /*!
  @abstract A pointer to a Copy class function.
@@ -102,6 +116,11 @@ typedef void PGCReleaseFunction(PGCType instance);
  @discussion See @link PGCClassFunctions @/link for more info on class functions.
  */
 typedef PGCType PGCRetainFunction(PGCType instance);
+
+
+#pragma mark Range functions
+
+extern PGCRange PGCMakeRange(uint64_t location, uint64_t length);
 
 
 #pragma mark Polymorphic Functions

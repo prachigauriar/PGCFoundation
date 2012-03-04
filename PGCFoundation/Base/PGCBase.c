@@ -17,6 +17,16 @@
 const uint64_t PGCNotFound = UINT64_MAX;
 
 
+#pragma mark Range functions
+
+PGCRange PGCMakeRange(uint64_t location, uint64_t length)
+{
+    PGCRange range;
+    range.location = location;
+    range.length = length;
+    return range;
+}
+
 #pragma mark Polymorphic Functions
 
 PGCType PGCCopy(PGCType instance)

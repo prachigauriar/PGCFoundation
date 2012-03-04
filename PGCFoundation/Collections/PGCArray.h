@@ -14,23 +14,17 @@
 
 typedef struct _PGCArray PGCArray;
 
-struct _PGCArray {
-    PGCObject super;
-
-    PGCObject **objects;
-    uint64_t capacity;
-    uint64_t increment;
-    uint64_t count;
-};
-
 extern PGCClass *PGCArrayClass(void);
 extern PGCArray *PGCArrayInstance(void);
+extern PGCArray *PGCArrayWithObjects(PGCType object1, ...);
 
 #pragma mark Basic Functions
 
 extern PGCArray *PGCArrayInit(PGCArray *array);
 extern PGCArray *PGCArrayInitWithInitialCapacity(PGCArray *array, uint64_t initialCapacity);
 extern PGCArray *PGCArrayInitWithInitialCapacityAndIncrement(PGCArray *array, uint64_t initialCapacity, uint64_t increment);
+extern PGCArray *PGCArrayInitWithObjects(PGCArray *array, PGCType object1, ...);
+
 extern PGCType PGCArrayCopy(PGCType instance);
 extern PGCString *PGCArrayDescription(PGCType instance);
 extern bool PGCArrayEquals(PGCType instance1, PGCType instance2);
@@ -46,7 +40,13 @@ extern PGCType PGCArrayGetFirstObject(PGCArray *array);
 extern PGCType PGCArrayGetLastObject(PGCArray *array);
 
 extern uint64_t PGCArrayGetIndexOfObject(PGCArray *array, PGCType instance);
+extern uint64_t PGCArrayGetIndexOfObjectInRange(PGCArray *array, PGCType instance, PGCRange range);
 extern uint64_t PGCArrayGetIndexOfIdenticalObject(PGCArray *array, PGCType instance);
+extern uint64_t PGCArrayGetIndexOfIdenticalObjectInRange(PGCArray *array, PGCType instance, PGCRange range);
+
+#pragma mark Subarrays
+
+extern PGCArray *PGCArraySubarrayWithRange(PGCArray *array, PGCRange range);
 
 #pragma mark Object Addition, Replacement, and Removal
 

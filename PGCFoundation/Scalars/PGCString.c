@@ -8,12 +8,22 @@
 
 #include <PGCFoundation/PGCString.h>
 
+#include <ctype.h>
 #include <string.h>
 #include <stdio.h>
 
+
+struct _PGCString {
+    PGCObject super;
+    
+    char *buffer;
+    uint64_t capacity;
+    uint64_t length;
+};
+
 # pragma mark Private Global Constants
 
-static const uint64_t PGCStringDefaultCapacity = 128;
+static const uint64_t PGCStringDefaultInitialCapacity = 128;
 
 
 #pragma mark Private Function Interfaces
@@ -68,7 +78,7 @@ PGCString *PGCStringInit(PGCString *string)
     PGCObjectInit(&string->super);
 
     string->length = 0;
-    string->capacity = PGCStringDefaultCapacity;
+    string->capacity = PGCStringDefaultInitialCapacity;
     string->buffer = calloc(string->capacity, sizeof(char));
     if (!string->buffer) {
         PGCRelease(string);
@@ -108,7 +118,7 @@ PGCString *PGCStringInitWithFormatAndArguments(PGCString *string, const char *fo
 {
     if (!format) return NULL;
 
-    uint64_t capacity = strlen(format) + PGCStringDefaultCapacity;
+    uint64_t capacity = strlen(format) + PGCStringDefaultInitialCapacity;
     char *buffer = calloc(capacity, sizeof(char));
 
     // If we didn't have enough room in our buffer to accommodate the format string, 
@@ -156,7 +166,7 @@ bool PGCStringEquals(PGCType instance1, PGCType instance2)
 {
     if (!instance1 || !instance2) return false;
     if (!PGCObjectIsKindOfClass(instance1, PGCStringClass()) || !PGCObjectIsKindOfClass(instance2, PGCStringClass())) return false;
-    return strcmp(((PGCString *)instance1)->buffer, ((PGCString *)instance2)->buffer) != 0;
+    return strcmp(((PGCString *)instance1)->buffer, ((PGCString *)instance2)->buffer) == 0;
 }
 
 
@@ -197,6 +207,7 @@ void PGCStringReallocateBuffer(PGCString *string, uint64_t minimumLength)
     string->capacity = newCapacity;
 }
 
+
 #pragma mark Accessors
 
 const char *PGCStringGetCString(PGCString *string)
@@ -217,6 +228,74 @@ char PGCStringGetCharacterAtIndex(PGCString *string, uint64_t index)
 }
 
 
+void PGCStringSetCharacterAtIndex(PGCString *string, char character, uint64_t index)
+{
+    if (string && index < string->length) string->buffer[index] = character;
+}
+
+
+#pragma mark String Case
+
+PGCString *PGCStringGetLowercaseString(PGCString *string)
+{
+    PGCString *lowercaseString = PGCCopy(string);
+    if (!lowercaseString) return NULL;
+    
+    for (uint64_t i = 0; i < lowercaseString->length; i++) {
+        lowercaseString->buffer[i] = tolower(lowercaseString->buffer[i]);
+    }
+    
+    return PGCAutorelease(lowercaseString);
+}
+
+
+PGCString *PGCStringGetUppercaseString(PGCString *string)
+{
+    PGCString *uppercaseString = PGCCopy(string);
+    if (!uppercaseString) return NULL;
+    
+    for (uint64_t i = 0; i < uppercaseString->length; i++) {
+        uppercaseString->buffer[i] = toupper(uppercaseString->buffer[i]);
+    }
+    
+    return PGCAutorelease(uppercaseString);
+}
+
+
+#pragma mark Substrings
+
+PGCString *PGCStringGetSubstringToIndex(PGCString *string, uint64_t index)
+{
+    if (!string || index > string->length) return NULL;
+    return PGCStringGetSubstringWithRange(string, PGCMakeRange(0, index));
+}
+
+
+PGCString *PGCStringGetSubstringWithRange(PGCString *string, PGCRange range)
+{
+    // If the string is invalid, or the range’s start is beyond the string, or the range’s overall
+    // length goes beyond the end of the string, return NULL
+    if (!string || range.location >= string->length || range.location + range.length > string->length) return NULL;
+    
+    char *buffer = calloc(range.length + 1, sizeof(char));
+    if (!buffer) return NULL;
+    
+    // Copy range.length characters starting string->buffer[range.location] into our buffer, and create a new string using that buffer
+    memcpy(buffer, &string->buffer[range.location], range.length * sizeof(char));
+    PGCString *substring = PGCStringInstanceWithCString(buffer);
+    
+    free(buffer);
+    return substring;
+}
+
+
+PGCString *PGCStringGetSubstringFromIndex(PGCString *string, uint64_t index)
+{
+    if (!string || index > string->length - 1) return NULL;
+    return PGCStringGetSubstringWithRange(string,  PGCMakeRange(index, string->length - index));
+}
+
+
 #pragma mark Appending Strings
 
 void PGCStringPrependString(PGCString *string, PGCString *prependString)
@@ -234,9 +313,12 @@ void PGCStringInsertStringAtIndex(PGCString *string, PGCString *insertString, ui
     PGCStringReallocateBuffer(string, minimumStringLength);
     if (string->capacity <= minimumStringLength) return;
     
+    // Shift everything from string[index] onwards over by the length of insertString
     memmove(&string->buffer[index + insertString->length], &string->buffer[index], (string->length - index) * sizeof(char));
-    memmove(&string->buffer[index], &insertString->buffer[0], insertString->length * sizeof(char));
     
+    // Copy the contents of insertString to string[index] 
+    memmove(&string->buffer[index], &insertString->buffer[0], insertString->length * sizeof(char));
+
     string->length += insertString->length;
     string->buffer[string->length] = '\0';
 }
@@ -252,11 +334,27 @@ void PGCStringAppendString(PGCString *string, PGCString *appendString)
 void PGCStringAppendFormat(PGCString *string, const char *format, ...)
 {
     if (!string || !format) return;
-    
     va_list arguments;
     
     va_start(arguments, format);
     PGCString *formattedString = PGCStringInitWithFormatAndArguments(NULL, format, arguments);
     va_end(arguments);
+    
     PGCStringAppendString(string, formattedString);
+}
+
+
+#pragma mark Memory Efficiency
+
+void PGCStringCondense(PGCString *string)
+{
+    if (!string) return;
+
+    // Reallocate our buffer
+    char *reallocedBuffer = realloc(string->buffer, (string->length + 1) * sizeof(char));
+    if (!reallocedBuffer) return;
+    
+    // If reallocation succeeded, point to the new buffer and set our capacity to the new value
+    string->buffer = reallocedBuffer;
+    string->capacity = string->length + 1;
 }

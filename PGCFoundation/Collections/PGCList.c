@@ -8,28 +8,62 @@
 
 #include <PGCFoundation/PGCList.h>
 
+#pragma mark - PGCListNode
+
+typedef struct _PGCListNode PGCListNode;
+struct _PGCListNode {
+    PGCListNode *previous;
+    PGCListNode *next;
+    PGCType object;
+};
+
+
+struct _PGCList {
+    PGCObject super;
+    
+    PGCListNode *head;
+    PGCListNode *tail;
+    PGCListNode *current;
+    
+    uint64_t count;
+    uint64_t currentIndex;
+};
+
 #pragma mark Private Function Interfaces
 
-PGCListNode *PGCListGetNodeAtIndex(PGCList *list, uint64_t index);
+PGCList *PGCListInitWithObjectAndObjectArguments(PGCList *list, PGCType firstObject, va_list objectArguments);
 void PGCListDealloc(PGCType instance);
+PGCListNode *PGCListGetNodeAtIndex(PGCList *list, uint64_t index);
 
 
 #pragma mark - PGCList
 
 PGCClass *PGCListClass(void)
 {
-    static PGCClass *linkedListClass = NULL;
-    if (!linkedListClass) {
+    static PGCClass *listClass = NULL;
+    if (!listClass) {
         PGCClassFunctions functions = { PGCListCopy, PGCListDealloc, PGCListDescription, PGCListEquals, PGCListHash, NULL, NULL };
-        linkedListClass = PGCClassCreate("PGCList", PGCObjectClass(), functions, sizeof(PGCList));
+        listClass = PGCClassCreate("PGCList", PGCObjectClass(), functions, sizeof(PGCList));
     }
-    return linkedListClass;
+    return listClass;
 }
 
 
 PGCList *PGCListInstance(void)
 {
     return PGCAutorelease(PGCListInit(NULL));
+}
+
+
+PGCList *PGCListInstanceWithObjects(PGCType object1, ...)
+{
+    va_list arguments;
+    
+    va_start(arguments, object1);
+    PGCList *list = PGCListInitWithObjectAndObjectArguments(NULL, object1, arguments);    
+    va_end(arguments);
+    
+    return PGCAutorelease(list);
 }
 
 
@@ -40,6 +74,33 @@ PGCList *PGCListInit(PGCList *list)
     if (!list && (list = PGCAlloc(PGCListClass())) == NULL) return NULL;
     PGCObjectInit(&list->super);
     list->currentIndex = PGCNotFound;
+    return list;
+}
+
+
+PGCList *PGCListInitWithObjects(PGCList *list, PGCType object1, ...)
+{
+    va_list arguments;
+    
+    va_start(arguments, object1);
+    list = PGCListInitWithObjectAndObjectArguments(list, object1, arguments);    
+    va_end(arguments);
+    
+    return list;
+}
+
+
+PGCList *PGCListInitWithObjectAndObjectArguments(PGCList *list, PGCType firstObject, va_list objectArguments)
+{
+    list = PGCListInit(list);
+    if (!list) return NULL;
+    
+    PGCType object = firstObject;
+    while (object) {
+        PGCListAddObject(list, object);   
+        object = va_arg(objectArguments, PGCType);
+    }
+    
     return list;
 }
 
@@ -58,7 +119,7 @@ PGCType PGCListCopy(PGCType instance)
     PGCList *list = instance;
     
     PGCList *copy = PGCListInit(NULL);
-    for (uint64_t i = 0; i < list->count; i++) PGCListAddObject(copy, PGCListGetObjectAtIndex(list, i));
+    for (uint64_t i = 0; i < list->count; i++) PGCListAddObject(copy, PGCListGetNodeAtIndex(list, i)->object);
     
     return copy;
 }
@@ -82,8 +143,8 @@ bool PGCListEquals(PGCType instance1, PGCType instance2)
     if (list1->count != list2->count) return false;
     
     for (uint64_t i = 0; i < list1->count; i++) {
-        PGCType listObject1 = PGCListGetObjectAtIndex(list1, i);
-        PGCType listObject2 = PGCListGetObjectAtIndex(list2, i);
+        PGCType listObject1 = PGCListGetNodeAtIndex(list1, i)->object;
+        PGCType listObject2 = PGCListGetNodeAtIndex(list2, i)->object;
         
         if (PGCHash(listObject1) != PGCHash(listObject2)) return false;
         if (!PGCEquals(listObject1, listObject2)) return false;
@@ -101,11 +162,11 @@ uint64_t PGCListHash(PGCType instance)
     // This is the DJB2 hash function, which is a fast, public domain string hash with
     // excellent distribution. It was posted to comp.lang.c by Daniel J. Bernstein.
     // It has been adapted slightly to deal with an list of objects instead of an 
-    // array of characters
+    // list of characters
     uint64_t hash = 5381 + list->count;
     for (uint64_t i = 0; i < list->count; i++) {
         // Set hash to hash * 33 + the current element's value
-        hash = ((hash << 5) + hash) + PGCHash(PGCListGetObjectAtIndex(list, i));
+        hash = ((hash << 5) + hash) + PGCHash(PGCListGetNodeAtIndex(list, i)->object);
     }
     
     return hash;
@@ -174,9 +235,8 @@ PGCListNode *PGCListGetNodeAtIndex(PGCList *list, uint64_t index)
         goForward = (index > list->currentIndex);
     }
     
-    while (distanceLeft > 0) {
+    while (distanceLeft-- > 0) {
         iterator = goForward ? iterator->next : iterator->previous;
-        distanceLeft--;
     }
     
     list->currentIndex = index;
@@ -200,23 +260,57 @@ PGCType PGCListGetLastObject(PGCList *list)
 
 uint64_t PGCListGetIndexOfObject(PGCList *list, PGCType instance)
 {
-    if (!list || !instance || list->count == 0) return PGCNotFound;
+    return list ? PGCListGetIndexOfObjectInRange(list, instance, PGCMakeRange(0, list->count)) : PGCNotFound;
+}
+
+
+uint64_t PGCListGetIndexOfObjectInRange(PGCList *list, PGCType instance, PGCRange range)
+{
+    if (!list || !instance || list->count == 0 || range.location >= list->count || range.location + range.length > list->count) return PGCNotFound;
     
     uint64_t instanceHash = PGCHash(instance);
-    for (uint64_t i = 0; i < list->count; i++) {
-        PGCType object = PGCListGetObjectAtIndex(list, i);
+    
+    uint64_t lastIndex = range.location + range.length;
+    for (uint64_t i = range.location; i < lastIndex; i++) {
+        PGCType object = PGCListGetNodeAtIndex(list, i)->object;
         if (PGCHash(object) == instanceHash && PGCEquals(instance, object)) return i;
     }
     
     return PGCNotFound;
 }
 
-
 uint64_t PGCListGetIndexOfIdenticalObject(PGCList *list, PGCType instance)
 {
-    if (!list || !instance || list->count == 0) return PGCNotFound;
-    for (uint64_t i = 0; i < list->count; i++) if (PGCListGetObjectAtIndex(list, i) == instance) return i;
+    return list ? PGCListGetIndexOfIdenticalObjectInRange(list, instance, PGCMakeRange(0, list->count)) : PGCNotFound;
+}
+
+
+uint64_t PGCListGetIndexOfIdenticalObjectInRange(PGCList *list, PGCType instance, PGCRange range)
+{
+    if (!list || !instance || list->count == 0 || range.location >= list->count || range.location + range.length > list->count) return PGCNotFound;
+    
+    uint64_t lastIndex = range.location + range.length;
+    for (uint64_t i = range.location; i < lastIndex; i++) {
+        if (PGCListGetNodeAtIndex(list, i)->object == instance) return i;   
+    }
+    
     return PGCNotFound;
+}
+
+
+#pragma mark Sublists
+
+PGCList *PGCListSublistWithRange(PGCList *list, PGCRange range)
+{
+    if (!list || range.location >= list->count || range.location + range.length > list->count) return NULL;
+    
+    PGCList *sublist = PGCListInit(NULL);
+    uint64_t lastIndex = range.location + range.length;
+    for (uint64_t i = range.location; i < lastIndex; i++) {
+        PGCListAddObject(sublist, PGCListGetNodeAtIndex(list, i)->object);
+    }
+    
+    return PGCAutorelease(sublist);
 }
 
 
@@ -362,12 +456,14 @@ void PGCListRemoveAllObjects(PGCList *list)
 PGCString *PGCListJoinComponentsWithString(PGCList *list, PGCString *separator)
 {
     if (!list) return NULL;
-    
-    PGCString *join = PGCStringInstance();
+    PGCAutoreleasePool *pool = PGCAutoreleasePoolCreate();
+
+    PGCString *join = PGCStringInit(NULL);
     for (uint64_t i = 0; i < list->count; i++) {
-        PGCStringAppendString(join, PGCDescription(PGCListGetObjectAtIndex(list, i)));
+        PGCStringAppendString(join, PGCDescription(PGCListGetNodeAtIndex(list, i)->object));
         if (i != list->count - 1) PGCStringAppendString(join, separator);
     }
     
-    return join;
+    PGCAutoreleasePoolDestroy(pool);
+    return PGCAutorelease(join);
 }

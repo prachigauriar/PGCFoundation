@@ -21,6 +21,7 @@
 
 #include <PGCFoundation/PGCBase.h>
 #include <PGCFoundation/PGCClass.h>
+#include <PGCFoundation/PGCAutoreleasePool.h>
 
 #pragma mark - PGCObject 
 

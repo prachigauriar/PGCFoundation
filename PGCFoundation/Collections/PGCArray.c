@@ -11,12 +11,24 @@
 
 #include <string.h>
 
+struct _PGCArray {
+    PGCObject super;
+    
+    PGCObject **objects;
+    uint64_t capacity;
+    uint64_t increment;
+    uint64_t count;
+};
+
+
 #pragma mark Private Global Constants
 
 static const uint64_t PGCArrayDefaultInitialCapacity = 128;
 
+
 #pragma mark Private Function Interfaces
 
+PGCArray *PGCArrayInitWithObjectAndObjectArguments(PGCArray *array, PGCType firstObject, va_list objectArguments);
 void PGCArrayDealloc(PGCType instance);
 
 
@@ -39,6 +51,17 @@ PGCArray *PGCArrayInstance(void)
 }
 
 
+PGCArray *PGCArrayInstanceWithObjects(PGCType object1, ...)
+{
+    va_list arguments;
+    
+    va_start(arguments, object1);
+    PGCArray *array = PGCArrayInitWithObjectAndObjectArguments(NULL, object1, arguments);    
+    va_end(arguments);
+    
+    return PGCAutorelease(array);
+}
+
 #pragma mark Basic Functions
 
 PGCArray *PGCArrayInit(PGCArray *array)
@@ -52,6 +75,7 @@ PGCArray *PGCArrayInitWithInitialCapacity(PGCArray *array, uint64_t initialCapac
     return PGCArrayInitWithInitialCapacityAndIncrement(array, initialCapacity, 0);
 }
 
+
 PGCArray *PGCArrayInitWithInitialCapacityAndIncrement(PGCArray *array, uint64_t initialCapacity, uint64_t increment)
 {
     if (!array && (array = PGCAlloc(PGCArrayClass())) == NULL) return NULL;
@@ -64,6 +88,33 @@ PGCArray *PGCArrayInitWithInitialCapacityAndIncrement(PGCArray *array, uint64_t 
     if (!array->objects) {
         PGCRelease(array);
         return NULL;
+    }
+    
+    return array;
+}
+
+
+PGCArray *PGCArrayInitWithObjects(PGCArray *array, PGCType object1, ...)
+{
+    va_list arguments;
+    
+    va_start(arguments, object1);
+    array = PGCArrayInitWithObjectAndObjectArguments(array, object1, arguments);    
+    va_end(arguments);
+
+    return array;
+}
+
+
+PGCArray *PGCArrayInitWithObjectAndObjectArguments(PGCArray *array, PGCType firstObject, va_list objectArguments)
+{
+    array = PGCArrayInit(array);
+    if (!array) return NULL;
+
+    PGCType object = firstObject;
+    while (object) {
+        PGCArrayAddObject(array, object);   
+        object = va_arg(objectArguments, PGCType);
     }
     
     return array;
@@ -86,10 +137,8 @@ PGCType PGCArrayCopy(PGCType instance)
 {
     if (!instance || !PGCObjectIsKindOfClass(instance, PGCArrayClass())) return NULL;
     PGCArray *array = instance;
-    
     PGCArray *copy = PGCArrayInitWithInitialCapacityAndIncrement(NULL, array->count, 0);
-    for (uint64_t i = 0; i < array->count; i++) PGCArrayAddObject(copy, PGCArrayGetObjectAtIndex(array, i));
-    
+    for (uint64_t i = 0; i < array->count; i++) PGCArrayAddObject(copy, array->objects[i]);
     return copy;
 }
 
@@ -106,17 +155,15 @@ bool PGCArrayEquals(PGCType instance1, PGCType instance2)
 {
     if (!instance1 || !instance2) return false;
     if (!PGCObjectIsKindOfClass(instance1, PGCArrayClass()) || !PGCObjectIsKindOfClass(instance2, PGCArrayClass())) return false;
-
+    
     PGCArray *array1 = instance1;
     PGCArray *array2 = instance2;
     if (array1->count != array2->count) return false;
-        
+    
     for (uint64_t i = 0; i < array1->count; i++) {
-        PGCType arrayObject1 = PGCArrayGetObjectAtIndex(array1, i);
-        PGCType arrayObject2 = PGCArrayGetObjectAtIndex(array2, i);
-        
-        if (PGCHash(arrayObject1) != PGCHash(arrayObject2)) return false;
-        if (!PGCEquals(arrayObject1, arrayObject2)) return false;
+        PGCType arrayObject1 = array1->objects[i];
+        PGCType arrayObject2 = array2->objects[i];
+        if (PGCHash(arrayObject1) != PGCHash(arrayObject2) || !PGCEquals(arrayObject1, arrayObject2)) return false;
     }
     
     return true;
@@ -132,12 +179,13 @@ uint64_t PGCArrayHash(PGCType instance)
     // excellent distribution. It was posted to comp.lang.c by Daniel J. Bernstein.
     // It has been adapted slightly to deal with an array of objects instead of an 
     // array of characters
-    uint64_t hash = 5381 + array->count;
+    uint64_t hash = 5381;
+
     for (uint64_t i = 0; i < array->count; i++) {
-        // Set hash to hash * 33 + the current element's value
-        hash = ((hash << 5) + hash) + PGCHash(PGCArrayGetObjectAtIndex(array, i));
+        // Set hash to hash * 33 + the current element's hash
+        hash = ((hash << 5) + hash) + PGCHash(array->objects[i]); 
     }
-    
+
     return hash;
 }
 
@@ -176,25 +224,56 @@ PGCType PGCArrayGetLastObject(PGCArray *array)
 
 uint64_t PGCArrayGetIndexOfObject(PGCArray *array, PGCType instance)
 {
-    if (!array || !instance || array->count == 0) return PGCNotFound;
+    return array ? PGCArrayGetIndexOfObjectInRange(array, instance, PGCMakeRange(0, array->count)) : PGCNotFound;
+}
 
-    uint64_t instanceHash = PGCHash(instance);
-    for (uint64_t i = 0; i < array->count; i++) {
-        PGCType object = PGCArrayGetObjectAtIndex(array, i);
+
+uint64_t PGCArrayGetIndexOfObjectInRange(PGCArray *array, PGCType instance, PGCRange range)
+{
+    if (!array || !instance || array->count == 0 || range.location >= array->count || range.location + range.length > array->count) return PGCNotFound;
+
+    uint64_t instanceHash = PGCHash(instance);    
+    uint64_t lastIndex = range.location + range.length;
+    
+    for (uint64_t i = range.location; i < lastIndex; i++) {
+        PGCType object = array->objects[i];
         if (PGCHash(object) == instanceHash && PGCEquals(instance, object)) return i;
     }
     
     return PGCNotFound;
 }
 
-
 uint64_t PGCArrayGetIndexOfIdenticalObject(PGCArray *array, PGCType instance)
 {
-    if (!array || !instance || array->count == 0) return PGCNotFound;
-    for (uint64_t i = 0; i < array->count; i++) if (PGCArrayGetObjectAtIndex(array, i) == instance) return i;
+    return array ? PGCArrayGetIndexOfIdenticalObjectInRange(array, instance, PGCMakeRange(0, array->count)) : PGCNotFound;
+}
+
+
+uint64_t PGCArrayGetIndexOfIdenticalObjectInRange(PGCArray *array, PGCType instance, PGCRange range)
+{
+    if (!array || !instance || array->count == 0 || range.location >= array->count || range.location + range.length > array->count) return PGCNotFound;
+
+    uint64_t lastIndex = range.location + range.length;
+    for (uint64_t i = range.location; i < lastIndex; i++) if (array->objects[i] == instance) return i;
+    
     return PGCNotFound;
 }
 
+
+#pragma mark Subarrays
+
+PGCArray *PGCArraySubarrayWithRange(PGCArray *array, PGCRange range)
+{
+    if (!array || range.location >= array->count || range.location + range.length > array->count) return NULL;
+
+    PGCArray *subarray = PGCArrayInitWithInitialCapacity(NULL, range.length);
+    uint64_t lastIndex = range.location + range.length;
+    for (uint64_t i = range.location; i < lastIndex; i++) {
+        PGCArrayAddObject(subarray, array->objects[i]);
+    }
+
+    return PGCAutorelease(subarray);
+}
 
 #pragma mark Object Addition, Replacement, and Removal
 
@@ -241,7 +320,7 @@ void PGCArrayExchangeObjectsAtIndices(PGCArray *array, uint64_t index1, uint64_t
 
 void PGCArrayReplaceObjectAtIndex(PGCArray *array, PGCType instance, uint64_t index)
 {
-    if (!array || index >= array->count) return;
+    if (!array || index >= array->count || array->objects[index] == instance) return;
     PGCRelease(array->objects[index]);
     array->objects[index] = PGCRetain(instance);
 }
@@ -267,6 +346,8 @@ void PGCArrayRemoveObjectAtIndex(PGCArray *array, uint64_t index)
 {
     if (!array || index >= array->count) return;
     PGCRelease(array->objects[index]);
+    
+    // Shift all the objects starting at index + 1 down one
     memmove(&array->objects[index], &array->objects[index + 1], (array->count - index - 1) * sizeof(PGCObject *));
     array->count--;
 }
@@ -285,14 +366,16 @@ void PGCArrayRemoveAllObjects(PGCArray *array)
 PGCString *PGCArrayJoinComponentsWithString(PGCArray *array, PGCString *separator)
 {
     if (!array) return NULL;
+    PGCAutoreleasePool *pool = PGCAutoreleasePoolCreate();
     
-    PGCString *join = PGCStringInstance();
+    PGCString *join = PGCStringInit(NULL);
     for (uint64_t i = 0; i < array->count; i++) {
-        PGCStringAppendString(join, PGCDescription(PGCArrayGetObjectAtIndex(array, i)));
+        PGCStringAppendString(join, PGCDescription(array->objects[i]));
         if (i != array->count - 1) PGCStringAppendString(join, separator);
     }
     
-    return join;
+    PGCAutoreleasePoolDestroy(pool);
+    return PGCAutorelease(join);
 }
 
 

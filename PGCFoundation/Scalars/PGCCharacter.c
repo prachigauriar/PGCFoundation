@@ -11,6 +11,18 @@
 
 #include <stdio.h>
 
+/*!
+ @struct _PGCCharacter
+ @abstract PGCCharacter’s corresponding data structure.
+ @field super The instance’s superclass’s fields.
+ @field value The character value for the instance.
+ */
+struct _PGCCharacter {
+    PGCObject super;
+    char value;
+};
+
+
 PGCClass *PGCCharacterClass(void)
 {
     static PGCClass *characterClass = NULL;
@@ -22,7 +34,7 @@ PGCClass *PGCCharacterClass(void)
 }
 
 
-PGCCharacter *PGCharacterInstanceWithValue(char value)
+PGCCharacter *PGCCharacterInstanceWithValue(char value)
 {
     return PGCAutorelease(PGCCharacterInitWithValue(NULL, value));
 }

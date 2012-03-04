@@ -28,15 +28,9 @@
      
      The value of a PGCDecimal can be gotten using @link PGCDecimalGetValue @/link.
      
-     As is the case with all PGCFoundation classes, the internal fields of PGCDecimal should never be accessed directly. In
-     fact, we would prefer to not even expose the field names, but we must in order to support structural subtyping. To get the
-     values of a PGCDecimal’s instance variables, use its accessor functions.
+     PGCDecimal is not meant to be subclassed. As such, we do not expose the details of its data structure.
  */
 typedef struct _PGCDecimal PGCDecimal;
-struct _PGCDecimal {
-    PGCObject super;
-    double value;
-};
 
 /*!
  @abstract Returns the class data structure for PGCDecimal.

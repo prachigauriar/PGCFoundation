@@ -11,6 +11,17 @@
 
 #include <stdio.h>
 
+/*!
+ @struct _PGCDecimal
+ @abstract PGCDecimal’s corresponding data structure.
+ @field super The instance’s superclass’s fields.
+ @field value The floating-point value for the instance.
+ */
+struct _PGCDecimal {
+    PGCObject super;
+    double value;
+};
+
 PGCClass *PGCDecimalClass(void)
 {
     static PGCClass *decimalClass = NULL;

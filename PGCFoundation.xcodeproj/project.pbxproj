@@ -34,6 +34,10 @@
 		4C43977A14FAEA4F0041660D /* PGCNull.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43977914FAEA4F0041660D /* PGCNull.c */; };
 		4C43977E14FAFC6C0041660D /* PGCAutoreleasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C43977D14FAFC6C0041660D /* PGCAutoreleasePool.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C43978014FAFE210041660D /* PGCAutoreleasePool.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */; };
+		4CECDB4315028224000CECED /* PGCDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CECDB4215028224000CECED /* PGCDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CECDB461502823F000CECED /* PGCDictionary.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CECDB451502823F000CECED /* PGCDictionary.c */; };
+		4CECDB481502B456000CECED /* PGCDictionaryEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CECDB471502B456000CECED /* PGCDictionaryEntry.h */; };
+		4CECDB4A1502B45E000CECED /* PGCDictionaryEntry.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CECDB491502B45E000CECED /* PGCDictionaryEntry.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +92,10 @@
 		4C43977D14FAFC6C0041660D /* PGCAutoreleasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCAutoreleasePool.h; sourceTree = "<group>"; };
 		4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCAutoreleasePool.c; sourceTree = "<group>"; };
 		4C8C3FFE14FE84A2007F8A81 /* PGCFoundation.hdoc */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; name = PGCFoundation.hdoc; path = PGCFoundation/Documentation/PGCFoundation.hdoc; sourceTree = "<group>"; };
+		4CECDB4215028224000CECED /* PGCDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCDictionary.h; sourceTree = "<group>"; };
+		4CECDB451502823F000CECED /* PGCDictionary.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCDictionary.c; sourceTree = "<group>"; };
+		4CECDB471502B456000CECED /* PGCDictionaryEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGCDictionaryEntry.h; sourceTree = "<group>"; };
+		4CECDB491502B45E000CECED /* PGCDictionaryEntry.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGCDictionaryEntry.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +160,10 @@
 			children = (
 				4C43977114FA92470041660D /* PGCArray.h */,
 				4C43977214FA92520041660D /* PGCArray.c */,
+				4CECDB4215028224000CECED /* PGCDictionary.h */,
+				4CECDB451502823F000CECED /* PGCDictionary.c */,
+				4CECDB471502B456000CECED /* PGCDictionaryEntry.h */,
+				4CECDB491502B45E000CECED /* PGCDictionaryEntry.c */,
 				4C1FB4181500427A00ADE7B5 /* PGCList.h */,
 				4C1FB41A1500428B00ADE7B5 /* PGCList.c */,
 			);
@@ -215,6 +227,8 @@
 				4C43977814FAE9A10041660D /* PGCNull.h in Headers */,
 				4C43977E14FAFC6C0041660D /* PGCAutoreleasePool.h in Headers */,
 				4C1FB4191500427A00ADE7B5 /* PGCList.h in Headers */,
+				4CECDB4315028224000CECED /* PGCDictionary.h in Headers */,
+				4CECDB481502B456000CECED /* PGCDictionaryEntry.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +332,8 @@
 				4C43977A14FAEA4F0041660D /* PGCNull.c in Sources */,
 				4C43978014FAFE210041660D /* PGCAutoreleasePool.c in Sources */,
 				4C1FB41B1500428B00ADE7B5 /* PGCList.c in Sources */,
+				4CECDB461502823F000CECED /* PGCDictionary.c in Sources */,
+				4CECDB4A1502B45E000CECED /* PGCDictionaryEntry.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
