@@ -14,6 +14,7 @@ struct _PGCDictionaryEntry {
     PGCType object;
 };
 
+
 #pragma mark Private Function Interfaces
 
 void PGCDictionaryEntryDealloc(PGCType instance);
@@ -26,8 +27,7 @@ PGCClass *PGCDictionaryEntryClass(void)
 {
     static PGCClass *dictionaryEntryClass = NULL;
     if (!dictionaryEntryClass) {
-        PGCClassFunctions functions = { PGCDictionaryEntryCopy, PGCDictionaryEntryDealloc, NULL, PGCDictionaryEntryEquals, 
-            PGCDictionaryEntryHash, NULL, NULL };
+        PGCClassFunctions functions = { PGCDictionaryEntryCopy, PGCDictionaryEntryDealloc, NULL, NULL, NULL, NULL, NULL };
         dictionaryEntryClass = PGCClassCreate("PGCDictionaryEntry", PGCObjectClass(), functions, sizeof(PGCDictionaryEntry));
     }
     return dictionaryEntryClass;    
@@ -59,25 +59,6 @@ void PGCDictionaryEntryDealloc(PGCType instance)
     PGCRelease(entry->key);
     PGCRelease(entry->object);
     PGCSuperclassDealloc(entry);
-}
-
-
-bool PGCDictionaryEntryEquals(PGCType instance1, PGCType instance2)
-{
-    if (!instance1 || !instance2) return false;
-    if (!PGCObjectIsKindOfClass(instance1, PGCDictionaryEntryClass()) || !PGCObjectIsKindOfClass(instance2, PGCDictionaryEntryClass())) return false;
-
-    PGCDictionaryEntry *entry1 = instance1;
-    PGCDictionaryEntry *entry2 = instance2;
-
-    return PGCEquals(entry1->key, entry2->key) && PGCEquals(entry1->object, entry2->object);
-}
-
-
-uint64_t PGCDictionaryEntryHash(PGCType instance)
-{
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCDictionaryEntryClass())) return 0;
-    return PGCHash(((PGCDictionaryEntry *)instance)->key) * 33587 + PGCHash(((PGCDictionaryEntry *)instance)->object);
 }
 
 

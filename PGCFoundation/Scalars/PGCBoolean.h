@@ -28,7 +28,7 @@
      The PGCBoolean class is implemented as a “doubleton;” there are only ever two valid instances of PGCBoolean: one representing
      true and one representing false. You can get these instances using @link PGCBooleanTrue @/link and @link PGCBooleanFalse @/link,
      respectively. A boolean object should never be allocated using PGCAlloc. In fact, the class has no public initializer function, 
-     so an object allocated in this way couldn’t be initialized anyway. 
+     so an object allocated in this way couldn’t be initialized anyway.
  
      The value of a PGCBoolean can be gotten using @link PGCBooleanGetValue @/link, though @link PGCBooleanIsTrue @/link and 
      @link PGCBooleanIsFalse @/link provide similar functionality.

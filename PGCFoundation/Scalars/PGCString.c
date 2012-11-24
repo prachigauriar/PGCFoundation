@@ -296,38 +296,75 @@ PGCString *PGCStringGetSubstringFromIndex(PGCString *string, uint64_t index)
 }
 
 
-#pragma mark Appending Strings
+bool PGCStringHasPrefix(PGCString *string, PGCString *prefix)
+{
+    if (!string || !prefix || prefix->length > string->length) return false;
+
+    for (uint64_t i = 0; i < prefix->length; i++) {
+        if (string->buffer[i] != prefix->buffer[i]) return false;
+    }
+    
+    return true;
+}
+
+
+bool PGCStringHasSuffix(PGCString *string, PGCString *suffix)
+{
+    if (!string || !suffix || suffix->length > string->length) return false;
+
+    uint64_t stringOffset = string->length - suffix->length;
+    for (uint64_t i = 0; i < suffix->length; i++) {
+        if (string->buffer[i + stringOffset] != suffix->buffer[i]) return false;
+    }
+    
+    return true;    
+}
+
+
+#pragma mark String replacement
+
+void PGCStringReplaceCharactersInRangeWithString(PGCString *string, PGCRange range, PGCString *replacementString)
+{
+    if (!string || !replacementString || range.location > string->length || range.location + range.length > string->length) return;
+
+    // If the replacement string is bigger than the range being replaced, we need to resize
+    int64_t lengthDifference = replacementString->length - range.length;
+    if (lengthDifference > 0) {
+        uint64_t minimumStringLength = string->length + lengthDifference;
+        PGCStringReallocateBuffer(string, minimumStringLength);
+        if (string->capacity <= minimumStringLength) return;
+    }
+
+    // Move everything after range to where it will be after the replacement
+    uint64_t endOfRange = range.location + range.length;
+    memmove(&string->buffer[range.location + replacementString->length], &string->buffer[endOfRange], (string->length - endOfRange) * sizeof(char));
+
+    // Copy the contents of replacementString into the replacement range
+    memmove(&string->buffer[range.location], &replacementString->buffer[0], replacementString->length * sizeof(char));
+    
+    string->length += lengthDifference;
+    string->buffer[string->length] = '\0';
+}
+
+
+#pragma mark Inserting Strings
 
 void PGCStringPrependString(PGCString *string, PGCString *prependString)
 {
-    PGCStringInsertStringAtIndex(string, prependString, 0);
+    PGCStringReplaceCharactersInRangeWithString(string, PGCMakeRange(0, 0), prependString);
 }
 
 
 void PGCStringInsertStringAtIndex(PGCString *string, PGCString *insertString, uint64_t index)
 {
-    if (!string || !insertString || insertString->length == 0 || index > string->length) return;
-    
-    // Resize our buffer to accommodate the inserted string. If we couldn't resize successfully, return
-    uint64_t minimumStringLength = string->length + insertString->length;
-    PGCStringReallocateBuffer(string, minimumStringLength);
-    if (string->capacity <= minimumStringLength) return;
-    
-    // Shift everything from string[index] onwards over by the length of insertString
-    memmove(&string->buffer[index + insertString->length], &string->buffer[index], (string->length - index) * sizeof(char));
-    
-    // Copy the contents of insertString to string[index] 
-    memmove(&string->buffer[index], &insertString->buffer[0], insertString->length * sizeof(char));
-
-    string->length += insertString->length;
-    string->buffer[string->length] = '\0';
+    PGCStringReplaceCharactersInRangeWithString(string, PGCMakeRange(index, 0), insertString);
 }
 
 
 void PGCStringAppendString(PGCString *string, PGCString *appendString)
 {
     if (!string) return;
-    PGCStringInsertStringAtIndex(string, appendString, string->length);
+    PGCStringReplaceCharactersInRangeWithString(string, PGCMakeRange(string->length, 0), appendString);
 }
 
 

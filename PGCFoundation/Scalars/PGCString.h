@@ -50,9 +50,12 @@ extern PGCString *PGCStringGetSubstringToIndex(PGCString *string, uint64_t index
 extern PGCString *PGCStringGetSubstringWithRange(PGCString *string, PGCRange range);
 extern PGCString *PGCStringGetSubstringFromIndex(PGCString *string, uint64_t index);
 
-//#pragma mark String replacement
-//
-//extern void PGCStringReplaceCharactersInRangeWithString(PGCString *string, PGCRange range, PGCString *replacementString);
+extern bool PGCStringHasPrefix(PGCString *string, PGCString *prefix);
+extern bool PGCStringHasSuffix(PGCString *string, PGCString *suffix);
+
+#pragma mark String replacement
+
+extern void PGCStringReplaceCharactersInRangeWithString(PGCString *string, PGCRange range, PGCString *replacementString);
 //extern void PGCStringReplaceSubstringWithString(PGCString *string, PGCString *substring, PGCString *replacementString);
 
 #pragma mark Inserting Strings

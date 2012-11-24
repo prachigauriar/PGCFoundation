@@ -8,11 +8,14 @@
 
 #include <PGCFoundation/PGCFoundation.h>
 #include <stdio.h>
+#include <string.h>
 
 void TestArrays(void);
 void TestDictionaries(void);
 void TestStrings(void);
 
+void GenerateGroups(const char *filename, uint64_t groupCount);
+char *GetLineFromFile(FILE *file);
 
 int main(int argc, const char * argv[])
 {
@@ -24,10 +27,12 @@ int main(int argc, const char * argv[])
     printf("\nTesting dictionaries...\n");
     TestDictionaries();
 
-    
     printf("\nTesting strings...\n");
     TestStrings();
-        
+
+    printf("\nGenerating groups...\n");
+    GenerateGroups("/Users/prachi/Developer/Ruby/GroupCreator/FullClass", 7);
+
     PGCAutoreleasePoolDestroy(pool);
     return 0;
 }
@@ -137,9 +142,9 @@ void TestDictionaries(void)
 
 void TestStrings(void)
 {    
-    PGCString *string = PGCStringInitWithCString(NULL, "abc123");
-    PGCString *cString = PGCStringInstanceWithCString("xyz890");
-    
+    PGCString *string = PGCStringInitWithCString(NULL, "aBcdEf");
+    PGCString *cString = PGCStringInstanceWithCString("123456");
+
     printf("Originally, string = \"%s\"\n", PGCDescriptionCString(string));
     
     PGCStringPrependString(string, cString);
@@ -150,13 +155,103 @@ void TestStrings(void)
     
     PGCStringInsertStringAtIndex(string, cString, 6);
     printf("After insert, string = \"%s\"\n", PGCDescriptionCString(string));
-    
-    printf("Substring to 8: \"%s\"\n", PGCDescriptionCString(PGCStringGetSubstringToIndex(string, 8)));
-    printf("Substring in { 3, 9 }: \"%s\"\n", PGCDescriptionCString(PGCStringGetSubstringWithRange(string, PGCMakeRange(3, 9 ))));
-    printf("Substring from 8: \"%s\"\n", PGCDescriptionCString(PGCStringGetSubstringFromIndex(string, 8)));
+
+    PGCStringReplaceCharactersInRangeWithString(string, PGCMakeRange(3, 12), PGCStringInstance());
+    printf("After replace, string = \"%s\"\n", PGCDescriptionCString(string));
+
+    printf("Substring to 9: \"%s\"\n", PGCDescriptionCString(PGCStringGetSubstringToIndex(string, 9)));
+    printf("Substring in { 3, 6 }: \"%s\"\n", PGCDescriptionCString(PGCStringGetSubstringWithRange(string, PGCMakeRange(3, 6))));
+    printf("Substring from 9: \"%s\"\n", PGCDescriptionCString(PGCStringGetSubstringFromIndex(string, 9)));
     
     printf("Uppercase string: \"%s\"\n", PGCDescriptionCString(PGCStringGetUppercaseString(string)));
     printf("Lowercase string: \"%s\"\n", PGCDescriptionCString(PGCStringGetLowercaseString(string)));
 
     PGCRelease(string);
 }
+
+
+void GenerateGroups(const char *filename, uint64_t groupCount)
+{
+    FILE *groupsFile = fopen(filename, "r");
+    if (!groupsFile) return;
+    
+    PGCArray *names = PGCArrayInstance();
+    
+    char *line = NULL;
+    while ((line = GetLineFromFile(groupsFile))) {
+        PGCArrayAddObject(names, PGCStringInstanceWithCString(line));
+        free(line);
+    }
+
+    fclose(groupsFile);
+    
+    srandomdev();
+    
+    uint64_t nameCount = PGCArrayGetCount(names);
+    PGCArray *groups = PGCArrayInitWithInitialCapacity(NULL, groupCount);
+    for (uint64_t i = 0; i < groupCount; i++) {
+        PGCArrayAddObject(groups, PGCArrayInstance());
+    }
+    
+    uint64_t assignedNameCount = 0;
+    while (assignedNameCount < nameCount) {
+        PGCString *name = PGCArrayGetObjectAtIndex(names, random() % PGCArrayGetCount(names));
+        PGCArrayAddObject(PGCArrayGetObjectAtIndex(groups, assignedNameCount % groupCount), name);
+        PGCArrayRemoveObjectAtIndex(names, random() % PGCArrayGetCount(names));
+        ++assignedNameCount;
+    }
+
+    for (uint64_t i = 0; i < groupCount; ++i) {
+        printf("Group %llu:\n", i + 1);
+        
+        PGCArray *group = PGCArrayGetObjectAtIndex(groups, i);
+        uint64_t groupMemberCount = PGCArrayGetCount(group);
+        for (uint64_t j = 0; j < groupMemberCount; ++j) {
+            printf("\t%s\n", PGCDescriptionCString(PGCArrayGetObjectAtIndex(group, j)));
+        }
+    }
+    
+    PGCRelease(groups);
+}
+
+char *GetLineFromFile(FILE *file)
+{
+    if (!file || feof(file)) return NULL;
+    
+    size_t maxLength = 256;
+    size_t length = 0;
+    
+    char *line = malloc((maxLength + 1) * sizeof(char));
+    if (!line) return NULL;
+    
+    int characterRead = '\0';
+    
+    while ((characterRead = getc(file)) != EOF && characterRead != '\n') {
+        if (length >= maxLength) {
+            maxLength *= 2;
+            
+            char *reallocedLine = realloc(line, (maxLength + 1) * sizeof(char));
+            if (!reallocedLine) {
+                free(line);
+                return NULL;
+            }
+            
+            line = reallocedLine;
+        }
+        
+        line[length++] = (char)characterRead;
+    }
+    
+    if (ferror(file)) {
+        free(line);
+        return NULL;
+    }
+    
+    /* Try to reduce the size of the line to exactly fit line's length */
+    line[length] = '\0';
+    char *reallocedLine = realloc(line, (length + 1) * sizeof(char));
+    if (reallocedLine) line = reallocedLine;
+    
+    return line;
+}
+

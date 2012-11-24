@@ -18,7 +18,6 @@ extern PGCDictionaryEntry *PGCDictionaryEntryInstanceWithObjectAndKey(PGCType ob
 
 extern PGCDictionaryEntry *PGCDictionaryEntryInitWithObjectAndKey(PGCDictionaryEntry *entry, PGCType object, PGCType key);
 extern PGCType PGCDictionaryEntryCopy(PGCType instance);
-extern bool PGCDictionaryEntryEquals(PGCType instance1, PGCType instance2);
 
 extern PGCType PGCDictionaryEntryGetKey(PGCDictionaryEntry *entry);
 

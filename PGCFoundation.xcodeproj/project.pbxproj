@@ -144,12 +144,12 @@
 				4C43975F14F83D230041660D /* PGCFoundation.h */,
 				4C43976614F848C60041660D /* PGCBase.h */,
 				4C43976F14FA8F120041660D /* PGCBase.c */,
-				4C43976314F8488F0041660D /* PGCClass.h */,
-				4C43976414F848A00041660D /* PGCClass.c */,
 				4C43977D14FAFC6C0041660D /* PGCAutoreleasePool.h */,
 				4C43977F14FAFE210041660D /* PGCAutoreleasePool.c */,
 				4C43973714F7DEA90041660D /* PGCObject.h */,
 				4C43973614F7DEA90041660D /* PGCObject.c */,
+				4C43976314F8488F0041660D /* PGCClass.h */,
+				4C43976414F848A00041660D /* PGCClass.c */,
 			);
 			name = Base;
 			path = PGCFoundation/Base;
@@ -278,7 +278,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = PGC;
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "Prachi Gauriar";
 			};
 			buildConfigurationList = 4C43972814F7DDDC0041660D /* Build configuration list for PBXProject "PGCFoundation" */;
@@ -404,6 +404,7 @@
 		4C43973314F7DDDC0041660D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DOCUMENTATION_ROOT = "${SRCROOT}/${TARGET_NAME}/Documentation/HeaderDoc";
 				EXECUTABLE_PREFIX = lib;
 				GENERATE_DOCUMENTATION = NO;
@@ -416,6 +417,7 @@
 		4C43973414F7DDDC0041660D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DOCUMENTATION_ROOT = "${SRCROOT}/${TARGET_NAME}/Documentation/HeaderDoc";
 				EXECUTABLE_PREFIX = lib;
 				GENERATE_DOCUMENTATION = YES;
