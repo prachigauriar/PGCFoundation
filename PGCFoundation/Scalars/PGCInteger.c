@@ -75,7 +75,7 @@ PGCInteger *PGCIntegerInitWithUnsignedValue(PGCInteger *integer, uint64_t value)
 
 PGCType PGCIntegerCopy(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCIntegerClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCIntegerClass())) return NULL;
     PGCInteger *integer = instance;
     if (integer->isSigned) {
         return PGCIntegerInitWithSignedValue(NULL, integer->value.signedValue);
@@ -87,7 +87,7 @@ PGCType PGCIntegerCopy(PGCType instance)
 
 PGCString *PGCIntegerDescription(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCIntegerClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCIntegerClass())) return NULL;
     PGCInteger *integer = instance; 
     if (integer->isSigned) { 
         return PGCStringInstanceWithFormat("%lld", integer->value.signedValue); 
@@ -99,7 +99,6 @@ PGCString *PGCIntegerDescription(PGCType instance)
 
 bool PGCIntegerEquals(PGCType instance1, PGCType instance2)
 {
-    if (!instance1 || !instance2) return false;
     if (!PGCObjectIsKindOfClass(instance1, PGCIntegerClass()) || !PGCObjectIsKindOfClass(instance2, PGCIntegerClass())) return false;
     
     PGCInteger *integer1 = instance1;
@@ -121,7 +120,7 @@ bool PGCIntegerEquals(PGCType instance1, PGCType instance2)
 
 uint64_t PGCIntegerHash(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCIntegerClass())) return 0;
+    if (!PGCObjectIsKindOfClass(instance, PGCIntegerClass())) return 0;
     
     // Multiply by an arbitrary large prime before removing the fractional part so that all values of the form n.x don't map to n.
     return ((PGCInteger *)instance)->value.unsignedValue;

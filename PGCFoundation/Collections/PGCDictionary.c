@@ -105,7 +105,7 @@ PGCDictionary *PGCDictionaryInitWithObjectAndKeyAndArguments(PGCDictionary *dict
 
 void PGCDictionaryDealloc(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCDictionaryClass())) return;
+    if (!PGCObjectIsKindOfClass(instance, PGCDictionaryClass())) return;
     PGCDictionary *dictionary = instance;
     
     if (dictionary->buckets) {
@@ -119,7 +119,7 @@ void PGCDictionaryDealloc(PGCType instance)
 
 PGCType PGCDictionaryCopy(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCDictionaryClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCDictionaryClass())) return NULL;
     PGCDictionary *dictionary = instance;
     
     PGCDictionary *copy = PGCDictionaryInit(NULL);
@@ -160,7 +160,7 @@ PGCType PGCDictionaryCopy(PGCType instance)
 
 PGCString *PGCDictionaryDescription(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCDictionaryClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCDictionaryClass())) return NULL;
 //    PGCDictionary *dictionary = instance;
 
     return NULL;
@@ -175,7 +175,8 @@ bool PGCDictionaryEquals(PGCType instance1, PGCType instance2)
 
 uint64_t PGCDictionaryHash(PGCType instance)
 {
-    return 0;
+    if (!PGCObjectIsKindOfClass(instance, PGCDictionaryClass())) return 0;
+    return ((PGCDictionary *)instance)->count;
 }
 
 
@@ -248,7 +249,7 @@ void PGCDictionaryRemoveObjectForKey(PGCDictionary *dictionary, PGCType key)
         if (!PGCDictionaryEntryKeyEquals(entry, key)) continue;
         
         PGCListRemoveObjectAtIndex(bucket, i);
-        dictionary->count--;
+        --dictionary->count;
     }
 }
 

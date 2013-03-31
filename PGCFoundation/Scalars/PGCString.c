@@ -140,7 +140,7 @@ PGCString *PGCStringInitWithFormatAndArguments(PGCString *string, const char *fo
 
 void PGCStringDealloc(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCStringClass())) return;
+    if (!PGCObjectIsKindOfClass(instance, PGCStringClass())) return;
     PGCString *string = instance;
     if (string->buffer) free(string->buffer);
 
@@ -150,21 +150,20 @@ void PGCStringDealloc(PGCType instance)
 
 PGCType PGCStringCopy(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCStringClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCStringClass())) return NULL;
     return PGCStringInitWithCString(NULL, ((PGCString *)instance)->buffer);
 }
 
 
 PGCString *PGCStringDescription(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCStringClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCStringClass())) return NULL;
     return PGCAutorelease(PGCRetain(instance));
 }
 
 
 bool PGCStringEquals(PGCType instance1, PGCType instance2)
 {
-    if (!instance1 || !instance2) return false;
     if (!PGCObjectIsKindOfClass(instance1, PGCStringClass()) || !PGCObjectIsKindOfClass(instance2, PGCStringClass())) return false;
     return strcmp(((PGCString *)instance1)->buffer, ((PGCString *)instance2)->buffer) == 0;
 }
@@ -172,7 +171,7 @@ bool PGCStringEquals(PGCType instance1, PGCType instance2)
 
 uint64_t PGCStringHash(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCStringClass())) return 0;
+    if (!PGCObjectIsKindOfClass(instance, PGCStringClass())) return 0;
     PGCString *string = instance;
     char *buffer = string->buffer;
     

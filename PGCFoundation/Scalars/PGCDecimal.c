@@ -52,21 +52,20 @@ PGCDecimal *PGCDecimalInitWithValue(PGCDecimal *decimal, double value)
 
 PGCType PGCDecimalCopy(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCDecimalClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCDecimalClass())) return NULL;
     return PGCDecimalInitWithValue(NULL, ((PGCDecimal *)instance)->value);    
 }
 
 
 PGCString *PGCDecimalDescription(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCDecimalClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCDecimalClass())) return NULL;
     return PGCStringInstanceWithFormat("%f", ((PGCDecimal *)instance)->value);
 }
 
 
 bool PGCDecimalEquals(PGCType instance1, PGCType instance2)
 {
-    if (!instance1 || !instance2) return false;
     if (!PGCObjectIsKindOfClass(instance1, PGCDecimalClass()) || !PGCObjectIsKindOfClass(instance2, PGCDecimalClass())) return false;
     return ((PGCDecimal *)instance1)->value == ((PGCDecimal *)instance2)->value;
 }
@@ -74,7 +73,7 @@ bool PGCDecimalEquals(PGCType instance1, PGCType instance2)
 
 uint64_t PGCDecimalHash(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCDecimalClass())) return 0;
+    if (!PGCObjectIsKindOfClass(instance, PGCDecimalClass())) return 0;
     
     // Multiply by an arbitrary large prime before removing the fractional part so that all values of the form n.x don't map to n.
     return ((PGCDecimal *)instance)->value * 1248757;

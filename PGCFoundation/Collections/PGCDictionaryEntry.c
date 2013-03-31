@@ -54,7 +54,7 @@ PGCDictionaryEntry *PGCDictionaryEntryInitWithObjectAndKey(PGCDictionaryEntry *e
 
 void PGCDictionaryEntryDealloc(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCDictionaryEntryClass())) return;
+    if (!PGCObjectIsKindOfClass(instance, PGCDictionaryEntryClass())) return;
     PGCDictionaryEntry *entry = instance;
     PGCRelease(entry->key);
     PGCRelease(entry->object);
@@ -64,7 +64,7 @@ void PGCDictionaryEntryDealloc(PGCType instance)
 
 PGCType PGCDictionaryEntryCopy(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCDictionaryEntryClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCDictionaryEntryClass())) return NULL;
     PGCDictionaryEntry *entry = instance;
     return PGCDictionaryEntryInitWithObjectAndKey(entry, entry->object, entry->key);
 }

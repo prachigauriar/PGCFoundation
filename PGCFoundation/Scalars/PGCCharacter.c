@@ -52,21 +52,20 @@ PGCCharacter *PGCCharacterInitWithValue(PGCCharacter *character, char value)
 
 PGCType PGCCharacterCopy(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCCharacterClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCCharacterClass())) return NULL;
     return PGCCharacterInitWithValue(NULL, ((PGCCharacter *)instance)->value);    
 }
 
 
 PGCString *PGCCharacterDescription(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCCharacterClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCCharacterClass())) return NULL;
     return PGCStringInstanceWithFormat("%c", ((PGCCharacter *)instance)->value);
 }
 
 
 bool PGCCharacterEquals(PGCType instance1, PGCType instance2)
 {
-    if (!instance1 || !instance2) return false;
     if (!PGCObjectIsKindOfClass(instance1, PGCCharacterClass()) || !PGCObjectIsKindOfClass(instance2, PGCCharacterClass())) return false;
     return ((PGCCharacter *)instance1)->value == ((PGCCharacter *)instance2)->value;
 }
@@ -74,7 +73,7 @@ bool PGCCharacterEquals(PGCType instance1, PGCType instance2)
 
 uint64_t PGCCharacterHash(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCCharacterClass())) return 0;
+    if (!PGCObjectIsKindOfClass(instance, PGCCharacterClass())) return 0;
     return ((PGCCharacter *)instance)->value;
 }
 

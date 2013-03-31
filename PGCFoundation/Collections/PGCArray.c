@@ -123,7 +123,7 @@ PGCArray *PGCArrayInitWithObjectAndObjectArguments(PGCArray *array, PGCType firs
 
 void PGCArrayDealloc(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCArrayClass())) return;
+    if (!PGCObjectIsKindOfClass(instance, PGCArrayClass())) return;
     PGCArray *array = instance;
     if (array->objects) {
         PGCArrayRemoveAllObjects(array);
@@ -135,7 +135,7 @@ void PGCArrayDealloc(PGCType instance)
 
 PGCType PGCArrayCopy(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCArrayClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCArrayClass())) return NULL;
     PGCArray *array = instance;
     PGCArray *copy = PGCArrayInitWithInitialCapacityAndIncrement(NULL, array->count, 0);
     for (uint64_t i = 0; i < array->count; i++) PGCArrayAddObject(copy, array->objects[i]);
@@ -145,7 +145,7 @@ PGCType PGCArrayCopy(PGCType instance)
 
 PGCString *PGCArrayDescription(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCArrayClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCArrayClass())) return NULL;
     PGCString *joinString = PGCArrayJoinComponentsWithString(instance, PGCStringInstanceWithCString(", "));
     return PGCStringInstanceWithFormat("[%s]", PGCDescriptionCString(joinString));
 }
@@ -153,7 +153,6 @@ PGCString *PGCArrayDescription(PGCType instance)
 
 bool PGCArrayEquals(PGCType instance1, PGCType instance2)
 {
-    if (!instance1 || !instance2) return false;
     if (!PGCObjectIsKindOfClass(instance1, PGCArrayClass()) || !PGCObjectIsKindOfClass(instance2, PGCArrayClass())) return false;
     
     PGCArray *array1 = instance1;
@@ -172,21 +171,8 @@ bool PGCArrayEquals(PGCType instance1, PGCType instance2)
 
 uint64_t PGCArrayHash(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCArrayClass())) return 0;
-    PGCArray *array = instance;
-    
-    // This is the DJB2 hash function, which is a fast, public domain string hash with
-    // excellent distribution. It was posted to comp.lang.c by Daniel J. Bernstein.
-    // It has been adapted slightly to deal with an array of objects instead of an 
-    // array of characters
-    uint64_t hash = 5381;
-
-    for (uint64_t i = 0; i < array->count; i++) {
-        // Set hash to hash * 33 + the current element's hash
-        hash = ((hash << 5) + hash) + PGCHash(array->objects[i]); 
-    }
-
-    return hash;
+    if (!PGCObjectIsKindOfClass(instance, PGCArrayClass())) return 0;
+    return ((PGCArray *)instance)->count;
 }
 
 
@@ -349,7 +335,7 @@ void PGCArrayRemoveObjectAtIndex(PGCArray *array, uint64_t index)
     
     // Shift all the objects starting at index + 1 down one
     memmove(&array->objects[index], &array->objects[index + 1], (array->count - index - 1) * sizeof(PGCObject *));
-    array->count--;
+    --array->count;
 }
 
 

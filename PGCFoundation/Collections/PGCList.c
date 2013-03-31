@@ -107,7 +107,7 @@ PGCList *PGCListInitWithObjectAndObjectArguments(PGCList *list, PGCType firstObj
 
 void PGCListDealloc(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCListClass())) return;
+    if (!PGCObjectIsKindOfClass(instance, PGCListClass())) return;
     PGCListRemoveAllObjects((PGCList *)instance);
     PGCSuperclassDealloc(instance);
 }
@@ -115,7 +115,7 @@ void PGCListDealloc(PGCType instance)
 
 PGCType PGCListCopy(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCListClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCListClass())) return NULL;
     PGCList *list = instance;
     
     PGCList *copy = PGCListInit(NULL);
@@ -127,7 +127,7 @@ PGCType PGCListCopy(PGCType instance)
 
 PGCString *PGCListDescription(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCListClass())) return NULL;
+    if (!PGCObjectIsKindOfClass(instance, PGCListClass())) return NULL;
     PGCString *joinString = PGCListJoinComponentsWithString(instance, PGCStringInstanceWithCString(", "));
     return PGCStringInstanceWithFormat("[%s]", PGCDescriptionCString(joinString));
 }
@@ -135,7 +135,6 @@ PGCString *PGCListDescription(PGCType instance)
 
 bool PGCListEquals(PGCType instance1, PGCType instance2)
 {
-    if (!instance1 || !instance2) return false;
     if (!PGCObjectIsKindOfClass(instance1, PGCListClass()) || !PGCObjectIsKindOfClass(instance2, PGCListClass())) return false;
     
     PGCList *list1 = instance1;
@@ -156,20 +155,8 @@ bool PGCListEquals(PGCType instance1, PGCType instance2)
 
 uint64_t PGCListHash(PGCType instance)
 {
-    if (!instance || !PGCObjectIsKindOfClass(instance, PGCListClass())) return 0;
-    PGCList *list = instance;
-    
-    // This is the DJB2 hash function, which is a fast, public domain string hash with
-    // excellent distribution. It was posted to comp.lang.c by Daniel J. Bernstein.
-    // It has been adapted slightly to deal with an list of objects instead of an 
-    // list of characters
-    uint64_t hash = 5381 + list->count;
-    for (uint64_t i = 0; i < list->count; i++) {
-        // Set hash to hash * 33 + the current element's value
-        hash = ((hash << 5) + hash) + PGCHash(PGCListGetNodeAtIndex(list, i)->object);
-    }
-    
-    return hash;
+    if (!PGCObjectIsKindOfClass(instance, PGCListClass())) return 0;
+    return ((PGCList *)instance)->count;
 }
 
 
