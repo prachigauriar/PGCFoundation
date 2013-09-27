@@ -90,4 +90,8 @@ extern PGCString *PGCArrayJoinComponentsWithString(PGCArray *array, PGCString *s
 
 extern void PGCArrayCondense(PGCArray *array);
 
+#pragma mark Enumeration
+
+extern void PGCArrayEnumerateObjectsWithBlock(PGCArray *array, PGCEnumerationOptions options, PGCIndexedEnumerationBlock block);
+
 #endif

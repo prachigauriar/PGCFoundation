@@ -26,9 +26,13 @@
 
 #include <PGCFoundation/PGCFoundation.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 void TestArrays(void);
+void TestArrayEnumeration(void);
 void TestDictionaries(void);
 void TestStrings(void);
 
@@ -39,6 +43,12 @@ int main(int argc, const char * argv[])
 {
     PGCAutoreleasePool *pool = PGCAutoreleasePoolCreate();
 
+    unsigned seed = (unsigned)time
+    (NULL);
+    printf("Seeding the random number generator with %u...\n", seed);
+    srandom(seed);
+
+    
     printf("Testing arrays...");
     TestArrays();
     
@@ -49,7 +59,7 @@ int main(int argc, const char * argv[])
     TestStrings();
 
     printf("\nGenerating groups...\n");
-    GenerateGroups("/Users/prachi/Developer/Ruby/GroupCreator/FullClass", 7);
+    GenerateGroups("/Users/prachi/Developer/Ruby/GroupCreator/FullClass.txt", 7);
 
     PGCAutoreleasePoolDestroy(pool);
     return 0;
@@ -89,12 +99,48 @@ void TestArrays(void)
     }
         
     printf("array = %s\n", PGCDescriptionCString(array));
-    
+        
     PGCType object = NULL;
     while ((object = PGCArrayPopObject(array))) {
         printf("POP array => %p (%s)\n", object, PGCDescriptionCString(object));
     }
+    
+    TestArrayEnumeration();
+}
 
+
+void TestArrayEnumeration(void)
+{
+    PGCArray *array = PGCArrayInstance();
+    for (uint64_t i = 0; i < 10; ++i) {
+        PGCArrayAddObject(array, PGCIntegerInstanceWithUnsignedValue(i));
+    }
+
+    printf("Testing array enumeration with no options\n");
+    PGCArrayEnumerateObjectsWithBlock(array, 0, ^(PGCType object, uint64_t index, bool *stop) {
+        printf("array[%llu] = %s\n", index, PGCDescriptionCString(object));
+        *stop = (random() & 1) != 0 && index > 5;
+    });
+
+    printf("Testing array enumeration with PGCEnumerationReverse\n");
+    PGCArrayEnumerateObjectsWithBlock(array, PGCEnumerationReverse, ^(PGCType object, uint64_t index, bool *stop) {
+        printf("array[%llu] = %s\n", index, PGCDescriptionCString(object));
+        *stop = (random() & 1) != 0 && index < 5;
+    });
+    
+    printf("Testing array enumeration with PGCEnumerationConcurrent\n");
+    PGCArrayEnumerateObjectsWithBlock(array, PGCEnumerationConcurrent, ^(PGCType object, uint64_t index, bool *stop) {
+        printf("array[%llu] = %s\n", index, PGCDescriptionCString(object));
+        sleep(random() % 3);
+        *stop = (random() & 1) != 0;
+    });
+
+    printf("Testing array enumeration with PGCEnumerationConcurrent| PGCEnumerationReverse\n");
+    PGCArrayEnumerateObjectsWithBlock(array, PGCEnumerationConcurrent | PGCEnumerationReverse, ^(PGCType object, uint64_t index, bool *stop) {
+        printf("array[%llu] = %s\n", index, PGCDescriptionCString(object));
+        sleep(random() % 3);
+        *stop = (random() & 1) != 0;
+    });
 }
 
 
@@ -203,8 +249,6 @@ void GenerateGroups(const char *filename, uint64_t groupCount)
 
     fclose(groupsFile);
     
-    srandomdev();
-    
     uint64_t nameCount = PGCArrayGetCount(names);
     PGCArray *groups = PGCArrayInitWithInitialCapacity(NULL, groupCount);
     for (uint64_t i = 0; i < groupCount; i++) {
@@ -213,9 +257,10 @@ void GenerateGroups(const char *filename, uint64_t groupCount)
     
     uint64_t assignedNameCount = 0;
     while (assignedNameCount < nameCount) {
-        PGCString *name = PGCArrayGetObjectAtIndex(names, random() % PGCArrayGetCount(names));
+        uint64_t randomIndex = random() % PGCArrayGetCount(names);        
+        PGCString *name = PGCArrayGetObjectAtIndex(names, randomIndex);
         PGCArrayAddObject(PGCArrayGetObjectAtIndex(groups, assignedNameCount % groupCount), name);
-        PGCArrayRemoveObjectAtIndex(names, random() % PGCArrayGetCount(names));
+        PGCArrayRemoveObjectAtIndex(names, randomIndex);
         ++assignedNameCount;
     }
 

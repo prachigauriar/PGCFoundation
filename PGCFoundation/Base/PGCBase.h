@@ -272,4 +272,17 @@ extern void PGCSuperclassRelease(PGCType instance);
  */
 extern PGCType PGCSuperclassRetain(PGCType instance);
 
+
+#pragma mark Enumeration
+
+enum {
+    PGCEnumerationConcurrent = 1UL << 0,
+    PGCEnumerationReverse = 1UL << 1
+};
+
+typedef uint64_t PGCEnumerationOptions;
+
+typedef void (^PGCIndexedEnumerationBlock)(PGCType object, uint64_t index, bool *stop);
+
+
 #endif

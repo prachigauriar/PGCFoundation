@@ -84,7 +84,7 @@ struct _PGCAutoreleasePool {
 
 /*!
  @abstract Cleans up the autorelease pool stack when a thread terminates.
- param threadVariable The terminating thread’s value for PGCAutoreleasePoolThreadKey, which is of type PGCAutoreleasePool.
+ @param threadVariable The terminating thread’s value for PGCAutoreleasePoolThreadKey, which is of type PGCAutoreleasePool.
  @discussion If threadVariable is non-NULL, this function simply iterates over each of the pools in the specified stack
      and essentially destroys them in the order they were placed on the autorelease pool stack.
  */
@@ -126,7 +126,7 @@ void PGCAutoreleasePoolAddObject(PGCType instance)
     PGCAutoreleasePool *pool = pthread_getspecific(PGCAutoreleasePoolThreadKey);
     if (!pool) return;
     
-    // Allocate a new instance and set its object to instance
+    // Allocate a new entry and set its object to instance
     PGCAutoreleasePoolEntry *entry = calloc(1, sizeof(PGCAutoreleasePoolEntry));
     if (!entry) return;
     entry->object = instance;

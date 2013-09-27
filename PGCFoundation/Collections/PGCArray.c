@@ -25,8 +25,10 @@
 //
 
 #include <PGCFoundation/PGCArray.h>
+
 #include <PGCFoundation/PGCString.h>
 
+#include <dispatch/dispatch.h>
 #include <string.h>
 
 struct _PGCArray {
@@ -395,4 +397,33 @@ void PGCArrayCondense(PGCArray *array)
     
     array->objects = reallocedObjects;
     array->capacity = newCapacity;
+}
+
+
+#pragma mark Enumeration
+
+void PGCArrayEnumerateObjectsWithBlock(PGCArray *array, PGCEnumerationOptions options, PGCIndexedEnumerationBlock block)
+{
+    if (!array || !block || array->count == 0) return;
+    
+    bool concurrent = (options & PGCEnumerationConcurrent) != 0;
+    bool reverse = (options & PGCEnumerationReverse) != 0;
+    
+    dispatch_queue_t queue = concurrent ? dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) : dispatch_queue_create(NULL, NULL);
+    __block bool stop = false;
+    
+    if (!reverse) {
+        dispatch_apply(array->count, queue, ^(size_t i) {
+            if (stop) return;
+            block(array->objects[i], i, &stop);
+        });
+    } else {
+        dispatch_apply(array->count, queue, ^(size_t i) {
+            if (stop) return;
+            uint64_t index = array->count - i - 1;
+            block(array->objects[index], index, &stop);
+        });
+    }
+
+    if (!concurrent) dispatch_release(queue);
 }
